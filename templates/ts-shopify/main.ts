@@ -1,6 +1,6 @@
-function action() {
-    const message = 'hello world';
-    console.log(message);
+function sayHello() {
+  const message = 'hello world';
+  console.log(message);
 }
 
-action();
+sayHello();

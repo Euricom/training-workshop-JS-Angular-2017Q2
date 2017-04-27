@@ -1,8 +1,11 @@
 {
-  "name": "temp",
+  "name": "ts-spotify",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "startup template with spotify tslint config",
+  "scripts": {
+    "serve": "nodemon --exec ./node_modules/.bin/ts-node -- ./main.ts",
+    "lint": "tslint --project tsconfig.json --type-check"
+  },
   "dependencies": {
     "ts-node": "^3.0.2",
     "tslint": "4.5.x",
@@ -11,10 +14,6 @@
   "devDependencies": {
     "tslint-config-shopify": "^1.5.0"
   },
-  "scripts": {
-    "serve": "nodemon --exec ./node_modules/.bin/ts-node -- ./main.ts",
-    "lint": "tslint --project tsconfig.json --type-check"
-  },
   "author": "",
-  "license": "ISC"
+  "license": "MIT"
 }
