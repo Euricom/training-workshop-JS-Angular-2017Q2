@@ -1,0 +1,12 @@
+<div class="container">
+  <h1>My Users</h1>
+
+  <button class="btn btn-default" (click)="onSwitchView()">Switch</button>
+
+  <user-table-list *ngIf="tableView"
+                   [users]="users">
+  </user-table-list>
+  <user-panel-list *ngIf="!tableView"
+                   [users]="users$">
+  </user-panel-list>
+</div>
