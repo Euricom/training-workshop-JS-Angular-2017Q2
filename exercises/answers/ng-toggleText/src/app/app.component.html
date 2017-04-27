@@ -1,0 +1,35 @@
+<h1>Exercise text toggle</h1>
+
+<button (click)="onToggle()">Toggle Message</button><br>
+<span [hidden]="!toggle">
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates quas cupiditate inventore, fuga facere minima quisquam labore animi explicabo aliquam atque aperiam accusantium sint aliquid pariatur alias doloremque obcaecati, optio.
+</span>
+<br><br>
+
+<h1>Exercise text toggle - 2</h1>
+<!-- alternative -->
+<span *ngIf="toggle">
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates quas cupiditate inventore, fuga facere minima quisquam labore animi explicabo aliquam atque aperiam accusantium sint aliquid pariatur alias doloremque obcaecati, optio.
+</span>
+
+<hr>
+
+<h1>Exercise text toggle - 3</h1>
+
+<button (click)="msg.hidden = !msg.hidden">Toggle Message</button><br>
+<span #msg>
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates quas cupiditate inventore, fuga facere minima quisquam labore animi explicabo aliquam atque aperiam accusantium sint aliquid pariatur alias doloremque obcaecati, optio.
+</span><br>
+<!-- Show DOM property value -->
+<div>msg.hidden: {{msg.hidden}}</div>
+
+<hr>
+
+<h1>Exercise text toggle - 4</h1>
+
+<button (click)="showText = !showText">Toggle Message</button><br>
+<span [ngClass]="{hidden: showText}">
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates quas cupiditate inventore, fuga facere minima quisquam labore animi explicabo aliquam atque aperiam accusantium sint aliquid pariatur alias doloremque obcaecati, optio.
+</span><br>
+
+<hr>
