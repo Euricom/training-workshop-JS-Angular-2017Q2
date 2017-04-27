@@ -1,0 +1,21 @@
+<div class="container">
+  <alert>
+    We have a problem
+  </alert>
+
+  <alert type="error" (closed)="onAlertClosed()">
+    We have a problem
+  </alert>
+</div>
+
+<hr>
+<h1>Pipe sample</h1>
+<ul>
+  <li *ngFor="let user of users | filter">
+    {{user.name}}
+  </li>
+</ul>
+<hr>
+
+<button (click)="onAdduser()">Add user</button>
+
