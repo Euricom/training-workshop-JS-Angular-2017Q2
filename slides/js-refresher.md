@@ -179,7 +179,7 @@ You can run small CLI script via npm/yarn
     "name": "temp",
     "version": "1.0.0",
     "scripts": {
-        "start": "node main.js"
+        "serve": "node main.js"
     },
     ...
 }
@@ -188,8 +188,8 @@ You can run small CLI script via npm/yarn
 To run
 
 ```bash
-$ yarn start            # or 'npm run start'
-yarn start v0.18.1
+$ yarn serve            # or 'npm run serve'
+yarn serve v0.18.1
 $ node main.js
 ✨  Done in 0.12s.
 ```
@@ -202,6 +202,8 @@ $ node main.js
 <img src="./images/typescript.png" width="600px" /><br>
 
 > Install & Startup
+
+https://github.com/Microsoft/TypeScript/wiki/Roadmap#23-may-2017
 
 ----
 
@@ -332,7 +334,7 @@ Angular tslint configs
 
 ---
 
-# Javascript: Scope and Closure
+# Scope and Closure
 
 > What you need to know
 
@@ -533,7 +535,7 @@ How to fix this?
 
 ---
 
-# Javascript - this
+# this
 
 > One of the most powerful JavaScript keywords is this. Unfortunately it is hard to use if you don't exactly know how it works.
 
@@ -939,7 +941,7 @@ var Person = (function () {
 
 ---
 
-# Javascript - Awful Parts
+# Awful Parts
 
 > Why of why
 
@@ -1067,6 +1069,8 @@ Number('08')            // 8
 console.log(0.1 + 0.2 == 0.3);    // false!
 ```
 
+Better to use
+
 ```js
 // convert to integer
 console.log((0.1 * 100) + (0.2 * 100) == (0.3 * 100));  // true!
@@ -1095,7 +1099,7 @@ isNaN(NaN)              // true
 Object.is(a, NaN)       // true
 ```
 
-TypeScript & Object.is
+TypeScript & Object.is: you need to specify libs
 
 ```json
 {
@@ -1108,7 +1112,7 @@ TypeScript & Object.is
 
 ---
 
-# Javascript - ES6+
+# ES6+
 
 > What you should know
 
@@ -1173,7 +1177,7 @@ vs
 
 ----
 
-## The arrow function
+## Arrow function
 
 Simplified syntax
 
@@ -1213,7 +1217,7 @@ array.find(item => item.name === 'peter');
 
 ----
 
-## This - Arrow Function
+## Arrow Function and this
 
 ```javascript
 const car = {
@@ -1237,17 +1241,17 @@ car.start();        // output: Bmw started
 Multiline with interpollation
 
 ```js
-    const message = 'world'
+    const message = 'world';
     const template = `
         <div>
             <span>Hello ${message}</span>
         </div>
-    `
+    `;
 ```
 
 ```js
-    const message = `1 and 1 make ${1 + 1}`
-    console.log(message)
+    const message = `1 and 1 make ${1 + 1}`;
+    console.log(message);
 ```
 
 Inside (${ and }) is treated as a JavaScript expression
@@ -1275,7 +1279,7 @@ Inside (${ and }) is treated as a JavaScript expression
 
 ```js
     const INITIAL_STATE = { ... }
-    const myFunction = function(state = INITIAL_STATE, action){
+    function myFunction(state = INITIAL_STATE, action) {
         ...
     }
 ```
@@ -1409,13 +1413,15 @@ list.forEach(function(item) {
 
 // ES6+
 for (let item of list) {
-    console.log(item)
+    console.log(item);
 }
 
 // ES6+ loop over properties of an object
 const obj = { name: 'peter', age: 12 }
 for (let key in obj) {
-    console.log(key, obj[key])
+    if (obj.hasOwnProperty(key)) {
+        console.log(key, obj[key])
+    };
 }
 ```
 
@@ -1610,8 +1616,9 @@ See also: http://microsoft.github.io/TypeSearch/
 # Resources
 
 - [You-Dont-Know-JS Book series](https://github.com/getify/You-Dont-Know-JS)
-- [Frontendmasters - Kyle Simpson](https://frontendmasters.com/courses/)
+- [Frontendmasters - Advanced JavaScript - Kyle Simpson](https://frontendmasters.com/courses/advanced-javascript/)
 - [JavaScript Weekly](http://javascriptweekly.com/)
+- [TypeScript Weekly](https://www.typescript-weekly.com/)
 - [TOP 10 JAVASCRIPT TRAPS FOR A C# DEVELOPER](http://prasadhonrao.com/top-10-javascript-traps-for-a-csharp-developer/)
 
 ---

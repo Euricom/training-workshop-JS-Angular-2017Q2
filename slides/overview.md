@@ -2,7 +2,6 @@
 
 * Day1:
     - [ES5 to ES6 and TypeScript refresher](./js-refresher.md)
-    - [Typescript Typings](./ts-intro.md)
 
 * Day2:
     - [Angular Getting Started](./angular-getting-started.md)
