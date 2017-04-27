@@ -165,26 +165,27 @@ So we have the following commands:
 You can use the ```ng generate``` command to add features to your existing application:
 
 ```bash
-$ ng generate class my-new-class # add a class to your application
-$ ng generate component my-new-component # add a component to your application
-$ ng generate directive my-new-directive # add a directive to your application
-$ ng generate enum my-new-enum # add an enum to your application
-$ ng generate module my-new-module # add a module to your application
-$ ng generate pipe my-new-pipe # add a pipe to your application
-$ ng generate service my-new-service # add a service to your application
+$ ng generate class myClass # add a class to your application
+$ ng generate component myComponent # add a component to your application
+$ ng generate directive myDirective # add a directive to your application
+$ ng generate enum myEnum # add an enum to your application
+$ ng generate module myModule # add a module to your application
+$ ng generate pipe myPipe # add a pipe to your application
+$ ng generate service myService # add a service to your application
 ```
 
 Typically use
 
 ```bash
-$ ng g c --spec=false --inline-template
+# create a component: UserListComponent with no spec file and inline template
+$ ng g c userList --spec=false --inline-template
 ```
 
 <small>
 More: [https://www.sitepoint.com/ultimate-angular-cli-reference/](https://www.sitepoint.com/ultimate-angular-cli-reference/)
 </small>
 
-https://cli.angular.io/reference.pdf
+https://github.com/angular/angular-cli/wiki
 
 ---
 
@@ -609,7 +610,7 @@ Lets create a simple form
 # Components
 > In and outs of a component
 
----
+----
 
 ## Component
 
@@ -646,7 +647,7 @@ import { UserComponent } from './user/user.component';
 export class AppModule { }
 ```
 
----
+----
 
 ## Lifecycle hooks
 
@@ -912,4 +913,445 @@ Using less or sass
 
 - Don't use jquery or the bootstrap js library
 - Log a message to the console if the Alert is closed
+
+---
+
+# Services
+
+> A place for common logic.
+
+Keep so little logic in your components as possible, use services to handle the business logic.
+
+----
+
+## Services
+
+A simple service
+
+```js
+import { Injectable } from '@angular/core'
+
+@Injectable()
+export class UserService {
+    getUsers() {
+        return [
+            { id: 1, name: 'john', role: 'admin'}
+            { id: 1, name: 'peter', role: 'guest'}
+        ]
+    }
+}
+
+```
+
+And use it (with Dependency Injection)
+
+```js
+...
+import { UserService } from './services/userService'
+
+export class UserListComponent {
+    // the userService is injected by the Angular Dependency Injection
+    constructor(private userService: UserService) {
+    }
+
+    anAction() {
+        this.users = this.userService.getUser();
+    }
+}
+
+```
+
+----
+
+## Service registration
+
+You need to register the service in your NgModule
+
+```js
+import { UserService } from './services/userService'
+...
+
+@NgModule({
+    declarations: [
+        ...
+    ],
+    providers: [
+        UserService,
+    ],
+})
+```
+
+----
+
+## Angular Services
+
+You can use services in services, like the Angular http server
+
+```js
+import { Injectable } from '@angular/core'
+import { Http } from '@angular/http'
+
+@Injectable()
+export class UserService {
+    constructor(private http: Http) {
+    }
+    getUsers() {
+        return this.http.get('/api/users')
+            .map((res: Response) => res.json().data)
+    }
+}
+
+```
+
+---
+
+# Pipes
+
+> Pipes are like the filters in Angular 1or VueJS
+
+----
+
+## Use of pipes
+
+Simple
+
+    {{ 'Hello world' | uppercase }}
+
+Parameterizing a Pipe
+
+    <p>My birthday is {{ birthday | date:"MM/dd/yy" }}</p>
+
+Chaining pipes
+
+    <p>{{ data | date:"MM/dd/yy" | uppercase}}</p>
+
+Standard pipes
+
+- DatePipe
+- UpperCasePipe, LowerCasePipe
+- NumberPipe, CurrencyPipe
+- PercentPipe
+- JsonPipe
+
+<small>
+More see: [Pipes docs](https://angular.io/docs/ts/latest/api/#!?query=pipe)
+</small>
+
+----
+
+## Custom pipe
+
+Build your first pipe
+
+```js
+    import { Pipe, PipeTransform } from "@angular/core"
+
+    @Pipe({
+        name: 'firstuppercase'
+    })
+    export class FirstUppercasePipe implements PipeTransform {
+        transform(value) {
+            return value.charAt(0).toUpperCase() + value.slice(1);
+        }
+    }
+```
+
+register it
+
+```js
+// app.module.ts
+@NgModule({
+    declarations: [
+        FirstUppercasePipe
+    ],
+    ...
+})
+```
+
+and use it
+
+```js
+// my.component.ts
+import { FirstUppercasePipe } from '../pipes/firstUppercasePipe';
+
+@Component({
+    selector: 'my-component',
+    template: `
+        <h2>MyComponent</h2>
+        {{ name | firstuppercase }}
+    `,
+})
+```
+
+----
+
+## Custom pipe - with parameter
+
+Filter pipe with argument
+
+```ts
+@Pipe({
+    name: 'filter'
+})
+export class FilterPipe implements PipeTransform {
+    transform(value, name) {
+        return value.filter(item => item.name == name)
+    }
+}
+```
+
+Use
+
+```html
+{{ data | filter:'abc'}}
+```
+
+----
+
+## Pipe purity
+
+A pipe will only run again when the arguments are changed, not when the data changes. So by default all pipes are pure.
+
+```ts
+@Pipe({
+  name: 'filter',
+})
+export class FilterPipe implements PipeTransform  {
+  transform(value) {
+    return value.filter(item => item.id > 10)
+  }
+}
+```
+
+```ts
+users = [
+    { id: 1, name: 'peter'},
+    { id: 12, name: 'luc'},
+];
+
+onAdduser() {
+    // adding an element on the array won't update the pure pipe
+    this.users.push({ id: 14, name: 'peter'})
+}
+```
+
+```html
+<ul>
+  <li *ngFor="let user of users | filter">
+    {{user.name}}
+  </li>
+</ul>
+```
+
+----
+
+## Pipe purity
+
+You can disable it by
+
+```js
+@Pipe({
+    name: 'filter',
+    // An unpure pipe will run always
+    // Be aware of performance issues because you pipe will
+    // run many times more
+    pure: false,
+})
+```
+
+Another solution is to immutable mutate the array (faster)
+
+```ts
+onAdduser() {
+    this.users = [
+       ...this.users,
+       { id: 14, name: 'peter'}
+    ]
+}
+```
+
+---
+
+# Http
+
+> Get your data
+
+----
+
+## Setup
+
+- Install @angular/http ```yarn add @angular/http```
+- Register HttpModule (default in AngularCLI)
+
+```js
+import { HttpModule } from '@angular/http'
+
+@NgModule({
+    ...
+    imports: [
+        ...
+        HttpModule
+    ]
+    ...
+})
+```
+
+> This is already setup by AngularCLI
+
+Use
+
+```js
+import { Http } from '@angular/http'
+
+export class MyComponent {
+    tasks: any;
+    constructor(private http: Http) {
+        this.tasks = [];
+    }
+    ngOnInit() {
+        this.http.get('tasks.json')
+            .map(res => res.json())
+            .subscribe(result => {
+                this.tasks = result;
+            });
+    }
+}
+```
+
+----
+
+## Single Responsibility!
+### Split component and service
+
+```js
+import { Http } from '@angular/http'
+import 'rxjs/add/operator/map'
+
+export class TaskService {
+    constructor(private http: Http) {}
+    getTasks() {
+        return this.http.get('tasks.json')
+            .map(res => res.json())
+    }
+}
+```
+
+```js
+import { TaskService } from './services/taskService'
+
+export class MyComponent {
+    tasks = [];
+    constructor(private taskService: TaskService) {
+    }
+
+    ngOnInit() {
+        this.taskService.getTasks()
+            .subscribe(tasks => this.tasks = tasks);
+    }
+}
+
+```
+
+----
+
+## Handle error
+
+```js
+import { Http } from '@angular/http'
+import { Observable } from 'rxjs/Observable'
+import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/catch'
+
+export class TaskService {
+    constructor(private http: Http) {}
+    getTasks() {
+        return this.http.get('tasks.json')
+            .map(res => res.json())
+            .catch(error => {
+                let msg = `Status code ${error.status} on url ${error.url}`
+                console.error(msg)
+                return Observable.throw(error.json().error || 'Server error')
+            });
+    }
+}
+```
+
+```js
+// my.component.ts
+this.taskService.getTasks()
+    .subscribe(
+        // first function is result
+        users => this.users = users,
+        // second function is error
+        error => this.errorMessage = error,
+    );
+```
+
+----
+
+## Typed response
+
+```js
+// ./models/taskModel.ts
+export class Task {
+    constructor(
+        public id: Number,
+        public desc: String,
+        public completed:Boolean) { }
+}
+```
+
+```js
+// ./services/taskService.ts
+import { Task } from '../models/task.ts';
+
+getTasks() : Observable<Task[]> {
+    return this.http.get('tasks.json')
+        .map((res: Response)) => res.json())
+        .catch((error: Response) => {
+            let msg = `Status code ${error.status} on url ${error.url}`
+            console.error(msg)
+            return Observable.throw(error.json().error || 'Server error')
+        });
+}
+```
+
+```js
+import { Task } from '../models/task.ts';
+import { TaskService } from './services/taskService'
+
+export class MyComponent {
+    tasks: Task[] = [];
+    constructor(private taskService: TaskService) {
+    }
+
+    ngOnInit() {
+        this.taskService.getTasks()
+            .subscribe(tasks => this.tasks = tasks);
+    }
+}
+```
+
+----
+
+## Setup angular-cli proxy
+
+proxy.config.json
+
+```json
+{
+  "/api/*": {
+    "target": "http://localhost:3000",
+  }
+}
+```
+
+package.json
+
+```json
+"scripts": {
+    "serve": "ng serve --proxy-config proxy.config.json",
+    ...
+}
+```
 
