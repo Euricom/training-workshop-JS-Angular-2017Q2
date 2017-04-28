@@ -4,19 +4,19 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "@types/clone": "^0.1.30",
-    "@types/node": "^7.0.14",
     "clone": "^2.1.1",
-    "moment": "^2.18.1",
-    "ts-node": "^3.0.2",
-    "tslint": "4.5.x",
-    "typescript": "2.3.0"
+    "moment": "^2.18.1"
   },
   "devDependencies": {
+    "ts-node": "^3.0.2",
+    "tslint": "4.5.x",
+    "typescript": "2.3.1",
+    "@types/clone": "^0.1.30",
+    "@types/node": "^7.0.14",
     "tslint-config-shopify": "^1.5.0"
   },
   "scripts": {
-    "start": "nodemon --exec ./node_modules/.bin/ts-node -- ./main.ts",
+    "serve": "nodemon --exec ./node_modules/.bin/ts-node -- ./main.ts",
     "lint": "tslint --project tsconfig.json --type-check"
   },
   "author": "",

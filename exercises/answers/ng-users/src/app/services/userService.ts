@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core'
-import { Http, Response } from '@angular/http'
-import { Observable } from 'rxjs/Observable'
+import { Injectable } from '@angular/core';
+import { Http, Response } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
 
-import { User } from '../models/user.model'
+import { User } from '../models/user.model';
 
 @Injectable()
 export class UserService {
@@ -10,16 +10,16 @@ export class UserService {
   }
 
   getUsers(): Observable<User[]> {
-    console.log('getUsers')
+    console.log('getUsers');
     return this.http.get('/api/users')
       .map((res: Response) => res.json())
       .map(data => data.users)
       .do(data => console.log('getUsers', data))
-      .catch(this.handleError)
+      .catch(this.handleError);
   }
 
   handleError(errorRes: Response) {
-    console.log('ERROR: ', errorRes.statusText)
-    return Observable.throw('Server Error')
+    console.log('ERROR: ', errorRes.statusText);
+    return Observable.throw('Server Error');
   }
 }

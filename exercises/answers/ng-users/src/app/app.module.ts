@@ -1,15 +1,15 @@
-import { BrowserModule } from '@angular/platform-browser'
-import { HttpModule } from '@angular/http'
-import { NgModule } from '@angular/core'
+import { BrowserModule } from '@angular/platform-browser';
+import { HttpModule } from '@angular/http';
+import { NgModule } from '@angular/core';
 
-import { AppComponent } from './app.component'
-import { UserComponent } from './components/user/user.component'
-import { UserPanelListComponent } from './components/userPanelList/userPanelList.component'
-import { UserTableListComponent } from './components/userTableList/userTableList.component'
+import { AppComponent } from './app.component';
+import { UserComponent } from './components/user/user.component';
+import { UserPanelListComponent } from './components/userPanelList/userPanelList.component';
+import { UserTableListComponent } from './components/userTableList/userTableList.component';
 
-import { UserService } from './services/userService'
+import { UserService } from './services/userService';
 
-import 'rxjs/Rx'
+import 'rxjs/Rx';
 
 @NgModule({
     imports: [

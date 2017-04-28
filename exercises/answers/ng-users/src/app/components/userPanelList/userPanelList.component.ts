@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core'
-import { User } from '../../models/user.model'
-import { Observable } from 'rxjs/Observable'
+import { Component, Input } from '@angular/core';
+import { User } from '../../models/user.model';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'user-panel-list',
@@ -8,7 +8,7 @@ import { Observable } from 'rxjs/Observable'
   styleUrls: ['./userPanelList.component.css']
 })
 export class UserPanelListComponent {
-  @Input() users: Observable<User[]>
+  @Input() users: Observable<User[]>;
 
   constructor() {
   }
