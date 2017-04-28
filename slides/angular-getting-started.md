@@ -607,6 +607,116 @@ Lets create a simple form
 
 ---
 
+# Debugging
+
+> If debugging is the process of removing software bugs, then programming must be the process of putting them in.
+
+----
+
+## Enabling and disabling debugging
+
+Angular 2 applications have development mode enabled by default.
+
+```
+Angular 2 is running in the development mode. Call enableProdMode() to enable the production mode.
+```
+
+See main.ts
+
+```
+import { enableProdMode } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+
+import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
+
+if (environment.production) {
+  enableProdMode();
+}
+
+platformBrowserDynamic().bootstrapModule(AppModule);
+```
+
+----
+
+## JSON Pipe
+
+The JSON pipe can help you debug by representing models as JSON objects.
+
+```
+<p> I can see the whole model here! :</p>
+{{hero | json}}
+```
+
+----
+
+## Debugger
+
+Enabling source maps to see the TypeScript code of your application.
+
+```json
+{
+    "compilerOptions": {
+        "sourceMap": true,
+    }
+}
+```
+
+In your source code put the debugger statement
+
+```js
+constructor(service: MyService) {
+    service.getCustomers()
+        .subscribe(data => this.data = data);
+    debugger;
+}
+```
+
+Or open the sources, navigate and set break point
+
+![debugger](./images/debugger.png)
+
+----
+
+## Augury
+
+[Angular Augury](https://augury.angular.io/)  is a great way to make the debugging process of your application more visual.
+
+![Augury](./images/augury.gif)
+
+----
+
+## Logging
+
+While 'console.log()'' is good for debugging don't use it in production. Its better to use a logger:
+
+```
+yarn add @nsalaun/ng-logger
+```
+
+```
+import { NgLoggerModule, Level } from '@nsalaun/ng-logger';
+@NgModule({
+    imports:      [
+        BrowserModule,
+        NgLoggerModule.forRoot(Level.LOG)     // change for production
+    ],
+    bootstrap: [ AppComponent ]
+})
+export class AppModule { }
+```
+
+```
+@Component({})
+export class MyComponent(){
+    constructor(private logger: Logger){
+        this.logger.log('Hello !', "It's working :)");
+    }
+}
+```
+
+---
+
 # Components
 > In and outs of a component
 
@@ -771,44 +881,6 @@ export class CardComponent {
 You can have [multi-slot projection](https://scotch.io/tutorials/angular-2-transclusion-using-ng-content)
 </small>
 
-----
-
-## Parent to Child
-
-Get a reference to a child: `@ViewChild()` or `@ViewChildren()`
-
-```js
-// userListComponent.js
-@component({
-    template: `
-        <filter></filter>
-    `
-})
-export class UserListComponent {
-    @ViewChild(FilterComponent) filter: FilterComponent;
-
-    getUsers() {
-        this.apiService.getUsers()
-            .then(users => {
-                this.users = users;
-                this.filter.clear();
-            })
-    }
-}
-```
-
-```js
-// filterComponent.js
-export class FilterComponent {
-    clear() {
-        this.filter = '';
-    }
-}
-```
-
-<small>
-You also have @ContentChild/@ContentChildren which looks for elements in your components content (the nodes projected info the component).
-</small>
 
 ----
 
@@ -840,29 +912,7 @@ External styling
 export class ZippyComponent { }
 ```
 
-<small>
-Use [angular2-template-loader](https://github.com/TheLarkInn/angular2-template-loader) if you want to use relative file paths with webpack.
-</small>
-
-----
-
-## Style View Encapsulation
-
-You can specify the view encapsulation
-
-```js
-@Component({
-    ...
-    encapsulation: ViewEncapsulation.Emulated  // default
-})
-export class MyComponent { }
-```
-
-Available View Encapsulation Types:
-
-- ***ViewEncapsulation.None***<br>No Shadow DOM at all. Therefore, also no style encapsulation.
-- ***ViewEncapsulation.Emulated***<br>No Shadow DOM but style encapsulation emulation.
-- ***ViewEncapsulation.Native***<br>Native Shadow DOM with all it’s goodness.
+> By default all component styles are isolated and not global (you can change this)
 
 ----
 
@@ -1181,7 +1231,7 @@ onAdduser() {
 ## Setup
 
 - Install @angular/http ```yarn add @angular/http```
-- Register HttpModule (default in AngularCLI)
+- Register HttpModule
 
 ```js
 import { HttpModule } from '@angular/http'
@@ -1196,7 +1246,7 @@ import { HttpModule } from '@angular/http'
 })
 ```
 
-> This is already setup by AngularCLI
+> AngularCLI will set this up for you :)
 
 Use
 
