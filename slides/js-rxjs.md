@@ -92,29 +92,58 @@ Events are fundamentally a collection of things, happens over time.
 
 # Everything can be defined as a stream
 
-An so be observed as a stream.
+And so be observed as a stream.
 
 ----
 
-## Simple streams
+## RxJS4 vs RxJS 5
 
-Numeric stream
+RxJS 5 is a ground-up rewrite of RxJS that actually began development when RxJS was in 2.0. This new version of RxJS had three basic goals:
 
-    const array = [0, 1, 2, 3, 4]
+- Better performance
+- Better debugging
+- Compliance with the ES7 Observable Spec
 
-As an observable numerical stream
-
-     Rx.Observable.from(array)
-      .subscribe(i => console.log(i) )
-
-An observable button click
-
-    Rx.Observable.fromEvent(btn, 'click')
-      .subscribe(i => console.log(i) )
+[https://github.com/ReactiveX/rxjs/blob/master/MIGRATION.md](https://github.com/ReactiveX/rxjs/blob/master/MIGRATION.md)
 
 ---
 
 ## Quickstart
+
+> Your first observables
+
+----
+
+## NodeJS
+
+Install RxJS
+
+```bash
+# install RxJS
+$ yarn add rxjs
+```
+
+Create an observable stream
+
+```js
+// main.ts
+import { Observable } from 'rxjs'
+
+const array = [1, 2, 3, 4, 5];
+const stream$ = Observable.from(array);
+```
+
+And subscribe to it
+
+```js
+stream$.subscribe((num) => {
+    console.log(num)
+})
+```
+
+----
+
+## Browser
 
 index.html
 
@@ -147,7 +176,7 @@ And subscribe to it
 ```js
 // simple
 btnStream$.subscribe((event) => {
-    console.log('Clicked', e)
+    console.log('Clicked', event)
 })
 ```
 
@@ -158,34 +187,40 @@ btnStream$.subscribe((event) => {
 ```js
 // with success, error and completed
 btnStream$.subscribe(
-    // success
+    // first function: success
     event => {
-        console.log('Clicked', e)
+        console.log('Clicked', event)
     },
-    // error
+    // second function: error
     err => {
         console.log('Err', err)
     },
-    // completed
+    // third function: completed
     completed => {
         console.log('Completed')
     }
 )
 ```
 
-An infinite Observable never completes
+Object syntax
+
+```js
+btnStream$.subscribe({
+    next: event => {
+        console.log('Clicked', e)
+    },
+    completed: () => {
+        console.log('|')
+    }
+    error: err = {
+        console.log('Error', err)
+    }
+})
+```
 
 ----
 
-## RxJS4 vs RxJS 5
-
-RxJS 5 is a ground-up rewrite of RxJS that actually began development when RxJS was in 2.0. This new version of RxJS had three basic goals:
-
-- Better performance
-- Better debugging
-- Compliance with the ES7 Observable Spec
-
-[https://github.com/ReactiveX/rxjs/blob/master/MIGRATION.md](https://github.com/ReactiveX/rxjs/blob/master/MIGRATION.md)
+<img src="./images/rxjs5.png" width="800">
 
 ----
 
@@ -199,11 +234,11 @@ const otherPromise = promise
     .then(result => {
         console.log(result)
     })
+
+// a promise execution returns back a promise.
 ```
 
-> Promises can be chained
-
-Observable
+vs Observable
 
 ```js
 const observable$ = service.doAction()
@@ -211,14 +246,16 @@ const subscription = observable$
     .subscribe(result => {
         console.log(result)
     })
+
+// a observable subscription returns a subscription
+```
+
+unsubscribe the subscription
+
+```js
 subscription.unsubscribe()
 ```
 
-> You can't chain subscriptions, but you can have multiple subscribers
-
-----
-
-<img src="./images/rxjs5.png" width="800">
 
 ---
 
@@ -260,14 +297,11 @@ Create an observable from an iterator
 const numbers = [1, 2, 3, 4, 5]
 const numbers$ = Rx.Observable.from(numbers)
 numbers$.subscribe(
-    num => {
+    next: num => {
         console.log(num)
     },
-    err => {
-        console.log(num)
-    },
-    completed => {
-        console.log('completed')
+    completed: () => {
+        console.log('|')
     }
 )
 ```
@@ -330,75 +364,80 @@ source$.subscribe(x => {
 })
 ```
 
+An infinite Observable never completes
+
 ----
 
 ## Create your own observable
 
 ```js
 const source$ = new Rx.Observable(observer => {
-    console.log('creating observable')
-    observer.next('hello world')
-    observer.next('hello rxjs')
-    observer.next('hello js')
-
-    setTimeout(() => {
-        observer.next('yet another')
-        observer.complete()
-    }, 2000)
+    observer.next(1)
+    observer.next(2)
+    observer.next(3)
+    observer.complete()
 })
 
 source$.subscribe(
-    x => {
+    next: x => {
         console.log(x)
     },
-    err => {
-        console.log(err)
-    },
-    complete => {
-        console.log('completed')
+    complete: () => {
+        console.log('|')
     }
 )
 ```
 
-----
-
-## Custom observable vs custom promises
-
-Promise
+More practical
 
 ```js
-function delay(timeout, value) {
-    return new Promise((resolve, reject) => {
-        setTimeout({
-            resolve(value)
-        }, timeout)
+const source$ = createFrom(array) {
+    return new Rx.Observable(observer => {
+        for(const item of array) {
+            observer.next(item)
+        }
+        observer.complete()
     })
 }
-
-delay(1000, 'hello')
-    .then(result => {
-        console.log(result)
-    })
 ```
 
-Observable
+----
+
+## Create your own - timer
 
 ```js
-function delay(timeout, value) {
-    return  Rx.Observable.create((observer) => {
-        setTimeout({
-            observer.next(value)
-        }, timeout)
-        // Any cleanup logic might go here
-        return () => console.log('disposed')
-    })
-}
+const source$ = new Rx.Observable(observer => {
+    let i = 0;
+    setInterval(() => {
+        observer.next(i++)
+    }, 1000)
+})
 
-const subscription = delay(1000, 'hello')
-    .subscribe(result => {
-        console.log(result)     // output: 'hello'
-    })
-subscription.dispose()          // output: disposed
+source$.subscribe(x => {
+    console.log(x)
+})
+```
+
+```js
+const source$ = new Rx.Observable(observer => {
+    let i = 0;
+    const token = setInterval(() => {
+        observer.next(i++)
+    }, 1000)
+    return () => {
+        // Any cleanup logic might go here
+        clearInterval(token)
+    }
+})
+
+const subscription = source$.subscribe(x => {
+    console.log(x)
+})
+
+setTimeout(() => {
+    // stop timer
+    subscription.unsubscribe();
+}, 5000)
 ```
 
 ----
@@ -425,7 +464,7 @@ source$
             console.log(err)
         },
         complete => {
-            console.log('completed')
+            console.log('|')
         }
     )
 ```
@@ -454,7 +493,7 @@ Rx.Observable
     })
 ```
 
-Finite Timers
+Take number of events
 
 ```js
 Rx.Observable
@@ -470,7 +509,6 @@ Map value to something else
 ```js
 const source$ = Rx.Observable
     .interval(1000)
-    .take(5)
     .map(x => x * 2)
 
 source$.subscribe(x => {
@@ -480,9 +518,15 @@ source$.subscribe(x => {
 
 ----
 
-## Basic operators
+## Marble diagrams
 
-Error handling
+![Marble Diagram](./images/marble-diagram-anatomy.svg)
+
+----
+
+## Other operators
+
+### Error handling
 
 ```js
 source$
@@ -492,7 +536,9 @@ source$
     )
 ```
 
-Retry
+[Learn](https://www.learnrxjs.io/operators/error_handling/catch.html)
+
+### Retry
 
 ```js
 Rx.DOM.ajax('api/users')
@@ -501,6 +547,41 @@ Rx.DOM.ajax('api/users')
         ...
     )
 ```
+
+[Learn](https://www.learnrxjs.io/operators/error_handling/retry.html)
+
+----
+
+## Filter operators
+
+### filter
+
+```js
+const source$ = Rx.Observable.from([1,2,3,4,5]);
+source$.filter(num => num % 2 === 0)
+    .subscribe((val) => {
+        console.log(`Even number: ${val}`)
+    });
+```
+
+[Learn](https://www.learnrxjs.io/operators/filtering/filter.html) -
+[Marbles](http://rxmarbles.com/#filter)
+
+### takeUntil
+
+```js
+const clickStream$ = Rx.Observable.fromEvent(document, 'click');
+const source$ = Rx.Observable.interval(3000);
+source$.takeUntil(clickStream$)
+    .subscribe((event) => {
+        console.log('i', event)
+    })
+```
+
+The stream completes when the document is clicked.
+
+[Learn](https://www.learnrxjs.io/operators/filtering/takeuntil.html) -
+[Marbles](http://rxmarbles.com/#takeUntil)
 
 ----
 
@@ -529,13 +610,13 @@ Rx.DOM.ajax('api/users')
 ## Operators
 
 #### Filter operators:
-skip, take, filter, find, first, distinct, debounceTime, ...
+skip, take, takeUntil, filter, find, first, distinct, debounceTime, ...
 
 #### Transform operators:
 pluck, map, mapTo, ...
 
 #### Mathematical operators:
-count, sum, min, max, ...
+count, sum, min, max, reduce, ...
 
 See [RxJS 5 Operators By Example](https://github.com/btroncone/learn-rxjs/blob/master/operators/README.md)
 
@@ -558,6 +639,67 @@ See [RxJS 5 Operators](https://github.com/Reactive-Extensions/RxJS/tree/master/d
 - Count the number of elements in a array (with an observable stream)
 
 - Create a stream of a single element with type string
+
+- Create a observable from a button click (use Observable.create)
+
+---
+
+# Custom operator
+
+```js
+const a$ = Rx.Observable.interval(1000).take(5);
+
+a$.subscribe({
+    next: x => console.log(x),
+    complete: () => console.log('|'),
+})
+```
+
+Create a transform function
+
+```js
+function transform(input, fn) {
+    return Rx.Observable.create(observer => {
+        input.subscribe({
+            next: v => observer.next(fn(v)),
+            complate: () => observer.complete()
+        });
+    })
+}
+const b$ = transform(a$, x => x * 2)
+b$.subscribe({
+    next: x => console.log(x),
+    complete: () => console.log('|'),
+})
+```
+
+----
+
+# Custom operator - prototype
+
+Improve with prototype
+
+```js
+function transform(fn) {
+    const input = this;
+    return Rx.Observable.create(observer => {
+        input.subscribe({
+            next: v => observer.next(fn(v)),
+            complate: () => observer.complete()
+        });
+    })
+}
+
+Rx.Observer.prototype.transform = transform;
+```
+
+```js
+a$.transform(x => x * 2)
+  .subscribe({
+    next: x => console.log(x),
+    complete: () => console.log('|'),
+})
+```
 
 ---
 
@@ -585,6 +727,18 @@ Rx.Observable.merge(source1$, source2$)
     .subscribe(x => console.log(x))
 ```
 
+Also
+
+```js
+const first$ = Rx.Observable.interval(2500);
+const second$ = Rx.Observable.interval(1000);
+const example$ = first$.merge(second$);
+const subscribe = example$.subscribe(val => console.log(val));
+```
+
+[Marbles](http://rxmarbles.com/#merge) -
+[Learn](https://www.learnrxjs.io/operators/combination/merge.html)
+
 ----
 
 ## concat
@@ -598,11 +752,14 @@ Rx.Observable.concat(source1$, source2$)
     .subscribe(x => console.log(x))
 ```
 
+[Marbles](http://rxmarbles.com/#concat) -
+[Learn](https://www.learnrxjs.io/operators/combination/concat.html)
+
 ----
 
-## ForkJoin
+## forkJoin
 
-Like Promise.all
+Like Promise.all (wait until all is finished)
 
 ```js
 const character$ = this.http.get('api/people/1').map(res => res.json())
@@ -610,14 +767,55 @@ const characterHomeworld$ = this.http.get('api/planets/1').map(res => res.json()
 
 Rx.Observable.forkJoin([character$, characterHomeworld$])
     .subscribe(results => {
-      console.log('homeworld' ,results[1])
-      console.log('character', results[0])
+        console.log('homeworld' ,results[1])
+        console.log('character', results[0])
     })
 ```
 
+[Learn](https://www.learnrxjs.io/operators/combination/forkjoin.html)
+
 ----
 
-## MergeMap
+## CombineLatest & Zip
+
+CombineLatest: Use latest value of each stream<br>
+Zip : Respond only to changes in both streams
+
+```html
+<select id="endpoint">
+  <option value="users">Users</option>
+  <option value="posts">Posts</option>
+</select>
+
+<select id="id">
+  <option value="1">1</option>
+  <option value="2">2</option>
+</select>
+```
+
+```js
+const endpointSelect = document.getElementById('endpoint');
+const endpointStream$ = Rx.Observable.fromEvent(endpointSelect, 'change')
+    .map(event => event.target)
+    .map(target => (target.options[target.selectedIndex].text.toLowerCase()));
+
+const idSelect = document.getElementById('id');
+const idStream$ = Rx.Observable.fromEvent(idSelect, 'change')
+    .map(event => event.target)
+    .map(target => (target.options[target.selectedIndex].text));
+
+endpointStream$.combineLatest(idStream$)
+  .subscribe((event) => {
+      console.log('combined', event)
+  })
+```
+
+[Marbles](http://rxmarbles.com/#combineLatest) -
+[Learn](https://www.learnrxjs.io/operators/combination/combinelatest.html)
+
+----
+
+## mergeMap (flatMap)
 
 Use value of observable to be used on the second observable
 
@@ -653,11 +851,14 @@ Rx.Observable.fromEvent(btn, 'click')
     })
 ```
 
+[Marbles](http://reactivex.io/documentation/operators/flatmap.html) -
+[Learn](https://www.learnrxjs.io/operators/transformation/mergemap.html)
+
 ----
 
-## SwitchMap
+## switchMap
 
-Use switchMap when you want to cancel the second when first emits
+Idem as flatMap but cancels the second when first emits
 
 ```js
 Rx.Observable.fromEvent(document, 'click');
@@ -669,12 +870,16 @@ Rx.Observable.fromEvent(document, 'click');
     })
 ```
 
+[Learn](https://www.learnrxjs.io/operators/transformation/switchmap.html)
+
+> Typical used with http.
+
 ---
 
-# In Depth
-> What you need to know
+# More to know
+> What else do we have
 
----
+----
 
 ## Subject
 
@@ -698,60 +903,51 @@ button.addEventListener(‘click’, () => subject.next('click'))
 subject.subscribe(x => console.log(x))
 ```
 
-Better to use:
+You also have:
 
-```js
-const clicks = new Observable(observer => {
-    const handler = (e) => observer.next(e);
-    button.addEventListener('click', handler);
-    return () => button.removeEventListener('click', handler);
-});
-
-const subscription = clicks.subscribe(event => { console.log(event) })
-subscription.unsubscribe()
-```
-
-Best to use:
-
-```js
-const clicks = Observable.fromEvent(button, 'click')
-```
+- [ReplaySubject](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/subjects/replaysubject.md): stores all the values that it has published
+- [BehaviorSubject](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/subjects/behaviorsubject.md): it only stored the last value it published
+- [AsyncSubject](): like BehaviorSubject but only when execution completes.
 
 ----
 
 ## Hot vs Cold
 
-The observable is said to be cold because it does not generate new values if no subscriptions exist.
+The observable is said to be ***COLD*** because it does not generate new values if no subscriptions exist.
 
-```
-var obs = Rx.Observable.interval(500).take(5)
-            .do(i => console.log("obs value "+ i) )
-obs.subscribe(value => console.log("observer 1 received " + value))
-obs.subscribe(value => console.log("observer 2 received " + value))
+```js
+const source$ = Rx.Observable.timer(1000)
+    .do(() => console.log('***SIDE EFFECT***'))
+    .mapTo('***RESULT***');
+const subscribe = source$.subscribe(val => console.log(val));
+const subscribeTwo = source$.subscribe(val => console.log(val));
 ```
 
 Output
 
-    obs value 0
-    observer 1 received 0
-    obs value 0
-    observer 2 received 0
-    obs value 1
-    observer 1 received 1
-    obs value 1
-    observer 2 received 1
+    ***SIDE EFFECT***
+    ***RESULT***
+    ***SIDE EFFECT***
+    ***RESULT***
 
-Every subscribe triggers a separate processing chain. Beware of your http calls!
-
-You can also share a observable (makes a cold observable hot)
+You can share a observable (makes a cold observable ***HOT***)
 
 ```js
-    var obs = Rx.Observable.interval(500).take(5)
-        .do(i => console.log("obs value "+ i) )
-        .share()
+const source$ = Rx.Observable.timer(1000)
+    .do(() => console.log('***SIDE EFFECT***'))
+    .mapTo('***RESULT***')
+    .share();
+const subscribe = source$.subscribe(val => console.log(val));
+const subscribeTwo = source$.subscribe(val => console.log(val));
 ```
 
-----
+Output
+
+    ***SIDE EFFECT***
+    ***RESULT***
+    ***RESULT***
+
+---
 
 ## Resources
 
