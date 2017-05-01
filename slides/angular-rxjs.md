@@ -101,7 +101,7 @@ Typical used operators during http calls
             .catch(handleError);
     }
 
-    handleError(error: any) {
+    handleError(error: Response | any) {
         if (error instanceOf Response) {
             let errMessage = '';
             try {
