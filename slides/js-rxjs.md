@@ -371,7 +371,7 @@ An infinite Observable never completes
 ## Create your own observable
 
 ```js
-const source$ = new Rx.Observable(observer => {
+const source$ = Rx.Observable.create(observer => {
     observer.next(1)
     observer.next(2)
     observer.next(3)
@@ -392,7 +392,7 @@ More practical
 
 ```js
 const source$ = createFrom(array) {
-    return new Rx.Observable(observer => {
+    return Rx.Observable.create(observer => {
         for(const item of array) {
             observer.next(item)
         }
@@ -406,7 +406,7 @@ const source$ = createFrom(array) {
 ## Create your own - timer
 
 ```js
-const source$ = new Rx.Observable(observer => {
+const source$ = Rx.Observable.create(observer => {
     let i = 0;
     setInterval(() => {
         observer.next(i++)
@@ -419,7 +419,7 @@ source$.subscribe(x => {
 ```
 
 ```js
-const source$ = new Rx.Observable(observer => {
+const source$ = Rx.Observable.create(observer => {
     let i = 0;
     const token = setInterval(() => {
         observer.next(i++)
@@ -445,12 +445,14 @@ setTimeout(() => {
 ## Error in stream
 
 ```js
-setTimeout(() => {
-    observer.next('a value')
-    observer.error(new Error('bad bad bad'))
-    observer.next('yet another')
-    observer.complete()
-}, 2000)
+Rx.Observable.create(observer => {
+    setTimeout(() => {
+        observer.next('a value')
+        observer.error(new Error('bad bad bad'))
+        observer.next('yet another')
+        observer.complete()
+    }, 2000)
+})
 ```
 
 ```js
@@ -476,7 +478,7 @@ An settled stream is completed of failed.
 ---
 
 ## Operators
-> The power of observables
+> To transform the observables
 
 ----
 
@@ -518,9 +520,13 @@ source$.subscribe(x => {
 
 ----
 
-## Marble diagrams
+## RX Marbles Diagrams
 
 ![Marble Diagram](./images/marble-diagram-anatomy.svg)
+
+Samples
+- [Map](http://rxmarbles.com/#map)
+- [Take](http://rxmarbles.com/#take)
 
 ----
 
@@ -547,6 +553,8 @@ Rx.DOM.ajax('api/users')
         ...
     )
 ```
+
+Observables are lyze by default.
 
 [Learn](https://www.learnrxjs.io/operators/error_handling/retry.html)
 
@@ -955,4 +963,5 @@ Try to understand
 
 - [http://reactivex.io/rxjs/](http://reactivex.io/rxjs/)
 - [Learn rxjs](https://github.com/btroncone/learn-rxjs)
+- [List of tutorials and videos](http://reactivex.io/tutorials.html)
 - [RxJs The Smartest Dumbest Tool Ever](http://www.christianalfoni.com/articles/2016_03_31_RxJs-the-smartest-dumbest-tool-ever)

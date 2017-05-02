@@ -1,6 +1,7 @@
 ### Javascript/Angular - Xerius - Agenda
 
 * Day1:
+    - [Intro](./intro.md)
     - [ES5 to ES6 and TypeScript refresher](./js-refresher.md)
 
 * Day2:
