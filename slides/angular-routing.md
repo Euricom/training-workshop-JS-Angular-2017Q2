@@ -27,13 +27,13 @@ Copyright (c) 2017 Euricom nv.
 
 ## Install & Setup
 
-Install forms module
+Install router module
 
 ```bash
 yarn add @angular/router
 ```
 
-> Mark that the router has version: 3.x
+> @angular/cli already include this
 
 ----
 
@@ -47,8 +47,8 @@ import { AppComponent } from './app.component'
 
 // create routes
 const appRoutes: Routes = [
-  { path: 'foo', component: FooComponent },
-  { path: 'bar', component: BarComponent },
+  { path: 'foo', component: FooComponent, name: 'foo' },
+  { path: 'bar', component: BarComponent, name: 'bar' },
   { path: '', redirectTo: '/foo', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }
 ]
@@ -111,7 +111,7 @@ export class PageNotFoundComponent {
 
 ## Router-outlet & routerLink
 
-Angular 2 routing expects you to have a base element in the head section
+Angular routing expects you to have a base element in the head section
 
 ```html
 <head>
@@ -128,8 +128,10 @@ The router-outlet
     template: `
         <h1>My App</h1>
         <nav>
+            <!-- link by URL -->
             <a routerLink="/foo">Foo</a>
-            <a routerLink="/bar">Bar</a>
+            <!-- link by route name -->
+            <a routerlink="['bar']">Bar</a>
         </nav>
         <!-- Routed views go here -->
         <router-outlet></router-outlet>
@@ -145,19 +147,24 @@ export class AppComponent() {}
 ```js
 @Component({
     template: `
-        <a routerLink="/foo" routerLinkActive="router-active-link">Foo</a>
+        <a routerLink="/foo" routerLinkActive="active-link">Foo</a>
     `
     styles: [`
-        .router-active-link {
-            background-color: gray
+        .active-link {
+            background-color: lightgray
         }
     `]
 })
 ```
 
+---
+
+# Parameters
+> Pass some data
+
 ----
 
-## Parameters
+## Route Parameters
 
 Declaring Route Parameters
 
@@ -169,7 +176,7 @@ const appRoutes: Routes = [
 ]
 ```
 
-Linking to Routes with Parameters
+Linking to Routes with parameters
 
 ```html
 <a *ngFor="let product of products"
@@ -180,7 +187,7 @@ Linking to Routes with Parameters
 
 ----
 
-## Parameters
+## Use the parameters
 
 Get the current params
 
@@ -194,36 +201,12 @@ import { ActivatedRoute } from '@angular/router'
         Parameter: {{id}}
     `
 })
-export class FooComponent() {
+export class FooComponent implements OnInit {
     id: String
     constructor(private route: ActivatedRoute) {}
 
     ngOnInit() {
         this.id = this.route.snapshot.params['id']
-    }
-}
-```
-
-----
-
-## Parameters
-
-Observe the route change
-
-```ts
-export class FooComponent() {
-    contact: Contact
-    private sub: any
-    constructor(private route: ActivatedRoute) {}
-
-    ngOnInit() {
-        this.sub = this.route.params
-            .map(params => params['id'])
-            .switchMap(id => this.contactsService.getContact(id))
-            .subscribe(contact => this.contact = contact)
-    }
-    ngOnDestroy() {
-        this.sub.unsubscribe()
     }
 }
 ```
@@ -236,21 +219,25 @@ export class FooComponent() {
 import { Location } from "@angular/common"
 import { Router, ActivatedRoute } from "@angular/router"
 
-constructor(private router: Router,
-            private route: ActivatedRoute,
-            private location: Location) {}
-action() {
-    // absolute
-    this.router.navigate(['/about'])
-    this.router.navigate(['/product-details', id])
-    this.router.navigateByUrl(`/courses/${course.id}`)
+@Component({
+    ...
+})
+export MyComponent {
+    constructor(private router: Router, private location: Location) {}
 
-    // relative
-    this.router.navigate("../../parent", {relativeTo: this.route})
-    this.router.navigate(["../../parent", {abc: 'xyz'}], {relativeTo: this.route})
+    action() {
+        // absolute
+        this.router.navigate(['/about'])
+        this.router.navigate(['/product-details', id])
+        this.router.navigateByUrl(`/courses/${course.id}`)
 
-    // back
-    this.location.back()
+        // relative
+        this.router.navigate("../../parent", {relativeTo: this.route})
+        this.router.navigate(["../../parent", {abc: 'xyz'}], {relativeTo: this.route})
+
+        // back
+        this.location.back()
+    }
 }
 ```
 
@@ -458,12 +445,14 @@ export class ContactResolve implements Resolve<Contact> {
 ## Resolve Data
 
 ```ts
-@Component()
+@Component({
+    ...
+})
 export class ContactsDetailComponent implements OnInit {
-    contact: any
+    contact: Contact
     constructor(private route: ActivatedRoute) {}
     ngOnInit() {
-        this.contact = this.route.snapshot.data['contact']
+        this.contact = this.route.snapshot.data['contact'] as Contact
     }
 }
 ```
