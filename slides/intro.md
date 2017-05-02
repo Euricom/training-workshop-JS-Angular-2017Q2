@@ -10,7 +10,7 @@ Copyright (c) 2017 Euricom nv. Licensed under the [MIT license](https://opensour
 
 # Content
 
-[https://github.com/Euricom/training-workshop-JS-Angular-2017Q2](https://github.com/Euricom/training-workshop-JS-Angular-2017Q2)
+### [http://bit.ly/2prsTJt](http://bit.ly/2prsTJt)
 
 - Slides
 - Templates
