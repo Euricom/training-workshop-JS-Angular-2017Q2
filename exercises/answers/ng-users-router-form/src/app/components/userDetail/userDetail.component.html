@@ -1,0 +1,116 @@
+<h1>userDetail</h1>
+
+<form (ngSubmit)="onSubmit(theForm)" #theForm="ngForm" novalidate>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="firstName">First name</label>
+        <input type="text" class="form-control" name="firstName"
+               required minlength="2"
+               #firstName="ngModel" [(ngModel)]="user.firstName">
+        <div *ngIf="firstName.errors && (firstName.dirty || firstName.touched)"
+             class="alert alert-danger">
+          <div *ngIf="firstName.errors.required">
+            Field is required
+          </div>
+          <div *ngIf="firstName.errors.minlength">
+            Field is to short
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="lastName">Last name</label>
+        <input type="text" class="form-control" name="lastName"
+               required minlength="2"
+               #lastName="ngModel" [(ngModel)]="user.lastName">
+        <div *ngIf="lastName.errors && (lastName.dirty || lastName.touched)" class="alert alert-danger">
+          <div *ngIf="lastName.errors.required">
+            Field is required
+          </div>
+          <div *ngIf="lastName.errors.minlength">
+            Field is to short
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" name="email"
+               required minlength="6"
+               #email="ngModel" [(ngModel)]="user.email">
+        <div *ngIf="email.errors && (email.dirty || email.touched)" class="alert alert-danger">
+          <div *ngIf="email.errors.required">
+            Field is required
+          </div>
+          <div *ngIf="email.errors.minlength">
+            Field is to short
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="text" class="form-control" name="phone"
+               [(ngModel)]="user.phone">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="age">Age</label>
+        <input type="number" class="form-control" name="age"
+               [(ngModel)]="user.age">
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="company">Company</label>
+        <input type="text" class="form-control" name="company"
+               [(ngModel)]="user.company">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="street">Street</label>
+        <input type="text" class="form-control" name="street"
+               [(ngModel)]="user.address.street">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-2">
+      <div class="form-group">
+        <label for="zip">Zip</label>
+        <input type="text" class="form-control" name="zip"
+               [(ngModel)]="user.address.zip">
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="form-group">
+        <label for="city">City</label>
+        <input type="text" class="form-control" name="city"
+               [(ngModel)]="user.address.city">
+      </div>
+    </div>
+  </div>
+  <button class="btn btn-default" (click)="onCancel($event)">Cancel</button>
+  <button class="btn btn-success" type="submit">Save</button>
+  <button *ngIf="user.id" class="btn btn-danger pull-right" (click)="onDelete(user, $event)">Delete</button>
+</form>
