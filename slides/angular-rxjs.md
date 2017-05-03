@@ -92,7 +92,7 @@ Typical used operators during http calls
 
 ----
 
-## Http - Improved error handling
+## Http improved error handling
 
 ```js
     getCustomers() Observable<Customer> {
@@ -131,6 +131,144 @@ Observable.forkJoin([users$, customers$])
 ```
 
 ---
+
+## Route Events
+
+router events
+
+```js
+export class AppComponent {
+    private sub: any;
+    constructor(private router: Router) {}
+    ngOnInit() {
+        this.sub = this.router.events
+            .filter(event => event instanceof NavigationEnd)
+            .subscribe((event) => {
+                console.log('NavigationEnd:', event);
+            });
+    }
+    ngOnDestroy() {
+        this.sub.unsubscribe();
+    }
+}
+```
+
+<small>
+See also: https://toddmotto.com/dynamic-page-titles-angular-2-router-events
+</small>
+
+route params changed
+
+```js
+export class MyComponent {
+    private sub: any;
+    constructor(private route: ActivatedRoute) {}
+    ngOnInit() {
+        // call getContact when route params changes
+        this.sub = this.route.params            // params is an observable
+            .map(params => params['id'])
+            .switchMap(id => this.contactsService.getContact(id))
+            .subscribe(contact => this.contact = contact);
+    }
+    ngOnDestroy() {
+        this.sub.unsubscribe();
+    }
+}
+```
+
+See also: params, queryParams, fragment, data, url
+
+---
+
+## Form valueChanges
+
+Handle control changes
+
+```html
+<!-- single control form -->
+<input type="text" [formControl]="searchControl">
+```
+
+```js
+export class AppComponent {
+    loading: Boolean;
+    searchControl = new FormControl();
+    ngOnInit() {
+        // call search when input changes (different value)
+        // and not more the every 400ms
+        this.sub = this.searchControl.valueChanges
+            .debounceTime(400)          // wait for 400ms
+            .distinctUntilChanged()     // value must change
+            .do( () => this.loading = true)
+            .switchMap(term => this.wikipediaService.search(term))
+            .do( () => this.loading = false)
+            .subscribe(items => this.items = items)
+    }
+    ngOnDestroy() {
+        this.sub.unsubscribe();
+    }
+}
+```
+
+Handle form changes
+
+```js
+    this.userForm.valueChanges
+        .subscribe(form => {
+            sessionStorage.setItem('form', JSON.stringify(form));
+        });
+```
+
+<small>
+See also: http://kfarst.github.io/angular/2016/12/12/subscribing-to-form-value-changes-in-angular-2/
+</small>
+
+---
+
+## Async Pipe
+
+```js
+import { Observable } from 'rxjs/Observable'
+import { Task } from './models/task'
+import { TaskService } from './services/taskService'
+
+export class MyComponent {
+    tasks$: Observable<Task[]>
+    constructor(private taskService: TaskService) {
+    }
+
+    getData() {
+        this.tasks$ = this.taskService.getTasks()
+            // additional log
+            .do(() => console.log('got data'))
+            // additional error handling
+            .catch(error => {
+                console.log('have error', error);
+                return Observable.of([])
+            })
+
+        // don't do a unsubscribe here, the async pipe unsubscribes automatically!
+    }
+}
+
+```
+
+In the template: async
+
+```html
+<ul>
+    <li *ngFor="let task of tasks$ | async">
+        {{task.name}} - {{task.completed}}
+    </li>
+</ul>
+```
+
+---
+
+# Practical Use RxJS
+> Usefull examples of RxJS in Angular apps
+
+----
 
 ## EventAggregator
 
@@ -199,77 +337,7 @@ export class AppComponent {
 }
 ```
 
----
-
-## Route Events
-
-router events
-
-```js
-this.router.events
-    .filter(event => event instanceof NavigationEnd)
-    .subscribe((event) => {
-        console.log('NavigationEnd:', event);
-    });
-```
-
-<small>
-See also: https://toddmotto.com/dynamic-page-titles-angular-2-router-events
-</small>
-
-route params changed
-
-```js
-// call getContact when route params changes
-this.sub = this.route.params            // params is an observable
-    .map(params => params['id'])
-    .switchMap(id => this.contactsService.getContact(id))
-    .subscribe(contact => this.contact = contact)
-```
-
----
-
-## Forms
-
-control ```valueChanges``` observable
-
-```html
-<input type="text"
-       [formControl]="searchControl">
-```
-
-```js
-export class AppComponent {
-    loading: Boolean;
-    searchControl = new FormControl();
-    ngOnInit() {
-        // call search when input changes (different value)
-        // and not more the every 400ms
-        this.searchControl.valueChanges
-            .debounceTime(400)          // wait for 400ms
-            .distinctUntilChanged()     // value must change
-            .do( () => this.loading = true)
-            .switchMap(term => this.wikipediaService.search(term))
-            .do( () => this.loading = false)
-            .subscribe(items => this.items = items)
-    }
-}
-```
-
-Handle form changes
-
-```js
-    this.registerForm.valueChanges
-        .subscribe(form => {
-            sessionStorage.setItem('form', JSON.stringify(form));
-        });
-```
-
-<small>
-See also: http://kfarst.github.io/angular/2016/12/12/subscribing-to-form-value-changes-in-angular-2/
-</small>
-
----
+----
 
 ## Caching data
 
@@ -287,45 +355,48 @@ export class BooksService {
         }
     }
 }
-
 ```
 
----
+<small>
+Observable Data Services: https://github.com/jhades/angular2-rxjs-observable-data-services
+</small>
 
-## Async Pipe
+----
+
+## AppStore
+
+Behavior subject keeps the last value and returns it upon subscription.
 
 ```js
-import { Observable } from 'rxjs/Observable'
-import { Task } from './models/task'
-import { TaskService } from './services/taskService'
+import { BehaviorSubject } from 'rxjs/BehaviorSubject'
 
-export class MyComponent {
-    tasks$: Observable<Task[]>
-    constructor(private taskService: TaskService) {
+export class AppStore {
+    constructor() {
+        this.store = new BehaviorSubject()
+        this.changes$ = store.asObservable()
+            .distinctUntilChanged()
+            .do(changes => console.log('new state', changes))
     }
 
-    getData() {
-        this.tasks$ = this.taskService.getTasks()
-            // additional log
-            .do(() => console.log('got data'))
-            // additional error handling
-            .catch(error => {
-                console.log('have error', error);
-                return Observable.of([])
-            })
+    setState(state: State) {
+        // will trigger all subscriptions to this.changes
+        this.store.next(state)
+    }
 
-        // don't do a subscribe here, let the async pipe do it!
+    getState() {
+        return this.store.value
     }
 }
 
-```
+// use
+const appStore = new AppStore()
+appStore.changes$
+    .subscribe(state => {
+        console.log('state changes:', state)
+    })
 
-In the template: async
-
-```html
-<ul>
-    <li *ngFor="let task of tasks$ | async">
-        {{task.name}} - {{task.completed}}
-    </li>
-</ul>
+// other place in your code
+appStore.setState({
+    name: 'admin'
+})
 ```

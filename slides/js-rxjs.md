@@ -593,6 +593,21 @@ The stream completes when the document is clicked.
 
 ----
 
+## Observable to promise
+
+```js
+// Angular http returns an observable
+http.get('api/users')
+    .map(res => res.json())
+    .toPromise()
+    .then(user => {
+        // result as an promise
+        console.log(users)
+    })
+```
+
+----
+
 ## More Operators
 
 ```js
@@ -965,3 +980,4 @@ Try to understand
 - [Learn rxjs](https://github.com/btroncone/learn-rxjs)
 - [List of tutorials and videos](http://reactivex.io/tutorials.html)
 - [RxJs The Smartest Dumbest Tool Ever](http://www.christianalfoni.com/articles/2016_03_31_RxJs-the-smartest-dumbest-tool-ever)
+- [Testing reactive code](https://glebbahmutov.com/blog/testing-reactive-code/)

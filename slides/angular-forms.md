@@ -27,9 +27,9 @@ Angular offers two form-building technologies:
     * Using the ngModel directive with two-way data binding
     * Good for simple forms
 
-* ***Reactive forms*** <br>
+* ***Model-driven forms*** <br>
     * Define your validation in code
-    * One way binding (better with redux)
+    * One way binding
     * Possible to unit test validation
 
 ---
@@ -75,7 +75,7 @@ export class AppModule { }
 
 Bootstrap styled form
 
-```
+```html
 <form (ngSubmit)="onSubmit()" #theForm="ngForm" novalidate>
     <div class="form-group">
         <label for="name">Name</label>
@@ -85,7 +85,8 @@ Bootstrap styled form
     <div class="form-group">
         <label for="power">Type</label>
         <select class="form-control" name="type"
-                [(ngModel)]="model.type">
+                [(ngModel)]="model.type"
+                (ngModelChange)="onTypeChange($event)">
             <option *ngFor="let type of types" [value]="type">{{type}}</option>
         </select>
     </div>
@@ -107,6 +108,9 @@ export class MyComponent {
         console.log('submit', this.model)
         this.submitted = true
     }
+    onTypeChange(event) {
+        console.log('type changed', event)
+    }
 }
 ```
 
@@ -119,9 +123,7 @@ export class MyComponent {
     <label for="name">Name</label>
     <input type="text" class="form-control" name="name"
            required minlength="4" maxlength="24"
-           [(ngModel)]="model.name"
-           #name="ngModel">
-    <br>Input info: {{name.className}}
+           [(ngModel)]="model.name">
     <button type="submit" class="btn btn-success"
             [disabled]="!theForm.form.valid">Submit</button>
 </form>
@@ -199,7 +201,7 @@ import { AppComponent } from './app.component'
 @NgModule({
   imports: [
     BrowserModule,
-    ReactiveFormsModule
+    ReactiveFormsModule   // <-  this is different from template based forms
   ],
   declarations: [
     AppComponent,
@@ -216,56 +218,59 @@ export class AppModule { }
 ## Template
 
 ```html
-<form [formGroup]="theForm" (ngSubmit)="onSubmit()">
-
-    <label for="firstName">FirstName</label>
-    <input type="text" id="firstName" class="form-control"
-           formControlName="firstName" >
-
-    <label for="lastName">LastName</label>
-    <input type="text" id="lastName" class="form-control"
-           formControlName="lastName" >
-    <div *ngIf="formErrors.lastName" class="alert alert-danger">
-        {{ formErrors.lastName }}
-    </div>
-
-    <button type="submit" class="btn btn-primary"
-        [disabled]="!theForm.valid">Submit</button>
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()" novalidate>
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input class="form-control" type="text" id="name"
+           formControlName="name" >
+  </div>
+  <div class="form-group">
+    <label for="type">Type</label>
+    <select class="form-control" name="type" formControlName="type">
+        <option *ngFor="let type of types" [value]="type">{{type}}</option>
+    </select>
+  </div>
+  <!-- for debug only -->
+  {{userForm | json}}
+  <!-- for debug only -->
+  <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 ```
-
-Changes:
-
-- The validation attributes are gone
-- The formControlName replaces the name attribute
-- The two-way [(ngModel)] binding is gone
-- The validation messages can be reduced to one div
-
-> The component class is now responsible for defining and managing the form control model.
 
 ----
 
 ## Component
 
 ```js
-import { FormGroup, FormBuilder, Validators } from '@angular/forms'
+import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 
-export class MyComponent {
-    theForm: FormGroup
-    model: any
-    constructor(private fb: FormBuilder) { }
+export class MyComponent extends OnInit {
+    model: any = { type: 'two'};
+    userForm: FormGroup;
+    types: any = ['one', 'two'];
 
+    constructor(private formBuilder: FormBuilder) { }
     ngOnInit() {
-        this.theForm = this.fb.group({
-            'firstName': [this.model.firstName],
-            'lastName': [this.modell.lastName],   // no validation for now
+        this.userForm = new FormGroup({
+            name: new FormControl(this.model.name),
+            type: new FormControl(this.model.type),
         })
     }
-
     onSubmit() {
-        this.submitted = true
-        this.model = this.theForm.value
+        this.model = this.userForm.value
+        console.log('submit', this.model)
     }
+}
+```
+
+Short version
+
+```js
+ngOnInit() {
+    this.userForm = this.formBuilder.group({
+        name: [this.model.name],
+        type: [this.model.type],
+    })
 }
 ```
 
@@ -273,108 +278,183 @@ export class MyComponent {
 
 ## Validations
 
-Template
-
-```html
-<div class="form-group"
-    [ngClass]="{'has-error':!theForm.controls['lastName'].valid}">
-    <label for="name">LastName</label>
-    <input type="text" id="lastName" class="form-control"
-           formControlName="lastName" >
-    <div *ngIf="theForm.controls['firstName'].hasError('required') &&
-                theForm.controls['firstName'].touched"
-        class="alert alert-danger">
-        You must include a first name.
-    </div>
-    <div *ngIf="theForm.controls['lastName'].hasError('minlength') &&
-                theForm.controls['lastName'].touched"
-        class="alert alert-danger">
-        Your last name must be at least 5 characters long.
-    </div
-</div>
-<button type="submit" class="btn btn-primary"
-    [disabled]="!theForm.valid">Submit</button>
-```
-
 Component
 
 ```js
 ngOnInit() {
-    this.theForm = this.fb.group({
-        'firstName': [this.model.firstName],
-        'lastName': [this.model.lastName, [
-            Validators.required,
-            Validators.minLength(4),
-            Validators.maxLength(24),
-        ]],
+    this.theForm = this.formBuilder.group({
+        // name: new FormControl(this.model.name, Validators.required),
+        name: [this.model.name, Validators.required],
+        type: [this.model.type],
     })
 }
 ```
 
+template
+
+```html
+<form [formGroup]="userForm" novalidate>
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" formControlName="name">
+        <div *ngIf="userForm.controls.name.hasError('required')">
+            This field is required!
+        </div>
+    </div>
+    {{ userForm.controls.name.errors | json }}
+    ...
+</form>
+```
+
 ----
 
-## Handle all in code
+## Multiple Validations
 
-```ts
-export class MyComponent implements OnInit
-  formErrors = {
-    'firstName': '',
-  }
+```js
+ngOnInit() {
+    this.theForm = this.fb.group({
+        'name': [this.model.name, [
+            Validators.required,
+            Validators.maxLength(5),
+            Validators.maxLength(20),
+            Validators.pattern(/^[A-Z].*/)   /* first letter capital */
+        ]],
+        'type': [this.model.type],
+    })
+}
+```
 
-  validationMessages = {
-    'name': {
-        'required':  'Name is required.',
-        'minlength': 'Name must be at least 4 characters long.',
-        'maxlength': 'Name cannot be more than 24 characters long.',
-    },
-  }
+template
+
+```html
+<form [formGroup]="userForm">
+    <div class="form-group">
+        <label>Name</label>
+        <input type="text" id="name" formControlName="name">
+        <p *ngIf="userForm.controls.name.hasError('required') &&
+                  userForm.controls.name.touched &&
+                  userForm.controls.name.dirty" class="error" >
+          This field is required!
+        </p>
+        <p *ngIf="(
+            userForm.controls.name.hasError('minlength') ||
+            userForm.controls.name.hasError('maxlength')) && userForm.conrols.name.touched &&
+            userForm.controls.name.dirty" class="error" >
+          5 characters minimum, 20 characters maximum
+        </p>
+        <p *ngIf="userForm.controls.name.hasError('pattern') &&
+                  userForm.controls.name.touched &&
+                  userForm.controls.name.dirty" class="error" >
+          This field should start with a capital letter
+        </p>
+    </div>
+    ...
+</form>
+```
+
+<small>
+See also: https://toddmotto.com/angular-2-forms-reactive
+</small>
+
+
+----
+
+## Custom Validation Function
+
+```js
+// myValidators.ts
+export const MyValidators = {
+    validEmail(control) {
+        if (control.value) {
+            if (control.value.includes('@euri.com')) {
+                return null;   // valid
+            }
+            // invalid
+            return {
+                'validEmail': 'Email is invalid ',
+            }
+        }
+        return null;  // valid
+    }
+}
+```
+
+```js
+import { MyValidators } from './myValidators'
 
 ngOnInit() {
     this.theForm = this.fb.group({
-        'firstName': [this.model.firstName],
-        'lastName': [this.modell.lastName, [
+        ...
+        'email': [this.model.name, [
             Validators.required,
-            Validators.minLength(4),
-            Validators.maxLength(24),
+            MyValidators.validEmail,
         ]],
+        ...
     })
-
-    this.theForm.valueChanges.subscribe(data => this.onValueChanged(data))
-    this.onValueChanged() // (re)set validation messages now
 }
+```
 
-onValueChanged(data?: any) {
-    if (!this.theForm) { return }
-    for (const field in this.formErrors) {
-        // clear previous error message (if any)
-        this.formErrors[field] = ''
-        const control = this.theForm.get(field)
-        if (control && control.dirty && !control.valid) {
-            const messages = this.validationMessages[field]
-            for (const key in control.errors) {
-                this.formErrors[field] += messages[key] + ' '
-            }
-        }
+Typesafe version
+
+```js
+// myValidators.ts
+import { ValidatorFn, AbstractControl } from '@angular/forms'
+export const MyValidators = {
+    validEmail(control: AbstractControl) : { [key: string]: boolean; } | null {
+        ...
     }
-  }
 }
 ```
 
 ----
 
-## Handle all in code - template
+## Simplify Errors with 'ngxErrors'
+
+Install
+
+```bash
+yarn add @ultimate/ngxerrors
+```
+
+Setup
+
+```js
+import { NgxErrorsModule } from '@ultimate/ngxerrors';
+
+@NgModule({
+    imports: [
+        ...
+        NgxErrorsModule
+    ]
+    ...
+})
+export class AppModule {}
+```
+
+Use
 
 ```html
-<label for="name">LastName</label>
-<input type="text" id="lastName" class="form-control"
-       formControlName="lastName" >
-<div *ngIf="formErrors.lastName" class="alert alert-danger">
-    {{ formErrors.lastName }}
+<input type="text" id="name" formControlName="name">
+<div ngxErrors="name">
+    <div ngxError="required" when="touched">
+        This field is required!
+    </div>
+    <div [ngxError]="['minlength', 'maxlength']"
+         [when]="['touched', 'dirty']">
+        5 characters minimum, 20 characters maximum
+    </div>
 </div>
-<button type="submit" class="btn btn-primary"
-    [disabled]="!theForm.valid">Submit</button>
 ```
 
-> See also: [https://ng2.angular-formly.com/](https://ng2.angular-formly.com/)
+<small>
+See: https://github.com/UltimateAngular/ngxerrors
+</small>
 
-----
+---
+
+# Resources
+
+- [ng-validators](https://www.npmjs.com/package/ng-validators)
+- [Angular 2 Form Validation](https://scotch.io/tutorials/angular-2-form-validation)
+- [How to Implement Conditional Validation in Angular 2 Model-driven Forms](https://scotch.io/tutorials/how-to-implement-conditional-validation-in-angular-2-model-driven-forms)
+- [Angular 2 form fundamentals: reactive forms](https://toddmotto.com/angular-2-forms-reactive)

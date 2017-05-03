@@ -13,8 +13,8 @@
 
 * Day4:
     - [RxJS Intro](./js-rxjs.md)
-    - [RxJS in Angular](./angular-rxjs.md)
+    - [Angular RxJS](./angular-rxjs.md)
 
 * Day5:
     - [Angular In Depth](./angular-indepth.md)
-    - [Unit Tests Basics](./unit-tests.md)
+    - [Angular Unit Tests](./angular-unittest.md)
