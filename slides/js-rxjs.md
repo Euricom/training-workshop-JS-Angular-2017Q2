@@ -981,3 +981,4 @@ Try to understand
 - [List of tutorials and videos](http://reactivex.io/tutorials.html)
 - [RxJs The Smartest Dumbest Tool Ever](http://www.christianalfoni.com/articles/2016_03_31_RxJs-the-smartest-dumbest-tool-ever)
 - [Testing reactive code](https://glebbahmutov.com/blog/testing-reactive-code/)
+- [RxJS Observables Crash Course](https://www.youtube.com/watch?v=ei7FsoXKPl0)

@@ -145,7 +145,6 @@ Yarn (fast, reliable and secure) alternative to npm
 
 ```bash
 $ yarn add jquery               # install jquery
-$ yarn add typescript global    # install typescript global
 $ yarn                          # install all modules from package.json
 $ yarn remove jquery            # uninstall jquery
 ```
@@ -212,7 +211,7 @@ https://github.com/Microsoft/TypeScript/wiki/Roadmap#23-may-2017
 Install
 
 ```bash
-$ yarn add typescript global
+$ npm install typescript -g
 ```
 
 Configure
@@ -227,8 +226,8 @@ $ tsc --init          -> creates the tsconfig.json
     "compilerOptions": {
         "module": "commonjs",
         "target": "es5",
+        "strict": false,
         "noImplicitAny": false,
-        "sourceMap": false
     },
     "exclude": [
        "node_modules"
@@ -257,7 +256,7 @@ Install
 
 ```bash
 # install ts-node
-$ yarn add ts-node global
+$ npm install ts-node -g
 ```
 
 Run it
@@ -269,7 +268,7 @@ ts-node main.ts
 Relaunch on code change
 
 ```bash
-$ yarn add nodemon global
+$ npm install nodemon -g
 $ nodemon --exec ./node_modules/.bin/ts-node -- ./main.ts
 ```
 

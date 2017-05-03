@@ -29,7 +29,7 @@ https://github.com/angular/angular-cli
 
 ```bash
 # install global
-yarn add @angular/cli global
+npm install @angular/cli -g
 
 # verify version
 $ ng --version
