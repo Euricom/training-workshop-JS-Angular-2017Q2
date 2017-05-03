@@ -1,0 +1,42 @@
+<div class="jumbotron">
+  <h2>Form w/ Validations</h2>
+  <form [formGroup]="userForm" (ngSubmit)="submitForm(userForm.value)">
+    <div class="form-group"
+         [ngClass]="{'has-error': userForm.controls.firstName.invalid && (userForm.controls['firstName'].touched  || userForm.submitted)}">
+      <label for="firstName3" class="control-label">First Name:</label>
+      <input type="text" class="form-control"
+             placeholder="Enter your firstname" id="firstName3"
+             formControlName="firstName">
+      <div class="help-block"
+           *ngIf="userForm.controls['firstName'].hasError('required') &&
+                  (userForm.controls['firstName'].touched || userForm.submitted)">This field is required</div>
+    </div>
+
+    <div class="form-group"
+         [ngClass]="{'has-error': userForm.controls.lastName.invalid && (userForm.controls['lastName'].touched  || userForm.submitted)}">
+      <label for="lastName3" class="control-label">Last Name</label>
+      <input type="text" class="form-control"
+             placeholder="Enter your lastname" id="lastName3"
+             formControlName="lastName">
+      <div class="help-block"
+           *ngIf="userForm.controls['lastName'].hasError('required') &&
+                  (userForm.controls['lastName'].touched || userForm.submitted)">This field is required</div>
+      <div class="help-block"
+           *ngIf="userForm.controls['lastName'].hasError('minlength') &&
+                  (userForm.controls['lastName'].touched || userForm.submitted)">This field must be minimal 3 long</div>
+    </div>
+    <div class="form-group">
+      <label for="type3" class="control-label">Type</label>
+      <select class="form-control" id="type3" formControlName="type">
+          <option *ngFor="let type of types" [value]="type">{{type}}</option>
+      </select>
+    </div>
+    <div class="checkbox">
+      <label class="checkbox-inline">
+        <input type="checkbox" name="isActive" formControlName="isActive"> Is Active
+      </label>
+    </div>
+    <button type="submit" class="btn btn-default">Submit</button>
+    <!--<button type="submit" class="btn btn-default" [disabled]="!userForm.valid">Submit</button>-->
+  </form>
+</div>

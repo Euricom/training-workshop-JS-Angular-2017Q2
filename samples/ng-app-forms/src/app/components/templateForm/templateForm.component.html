@@ -1,0 +1,29 @@
+<div class="jumbotron">
+  <h2>Template Driven Form</h2>
+  <form #form="ngForm" (ngSubmit)="submitForm(form)">
+    <div class="form-group">
+      <label for="firstName">First Name:</label>
+      <input type="text" class="form-control"
+             placeholder="Enter your firstname" name="firstName" id="firstName"
+             [(ngModel)]="model.firstName">
+    </div>
+    <div class="form-group">
+      <label for="lastName">Last Name</label>
+      <input type="text" class="form-control"
+             placeholder="Enter your lastname" name="lastName" id="lastName"
+             [(ngModel)]="model.lastName">
+    </div>
+    <div class="form-group">
+      <label for="type">Type</label>
+      <select class="form-control" name="type" id="type" [(ngModel)]="model.type">
+          <option *ngFor="let type of types" [value]="type">{{type}}</option>
+      </select>
+    </div>
+    <div class="checkbox">
+      <label class="checkbox-inline">
+        <input type="checkbox" name="isActive" [(ngModel)]="model.isActive"> Is Active
+      </label>
+    </div>
+    <button type="submit" class="btn btn-default">Submit</button>
+  </form>
+</div>

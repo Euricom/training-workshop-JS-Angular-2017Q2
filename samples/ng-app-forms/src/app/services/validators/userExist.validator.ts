@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import { AbstractControl, AsyncValidatorFn } from '@angular/forms'
+import { AbstractControl, AsyncValidatorFn } from '@angular/forms';
 
 @Injectable()
 export class UserExistValidator {
@@ -32,7 +32,7 @@ export class UserExistValidator {
             } else {
               resolve(null);
             }
-          }, 500)
+          }, 500);
         }
       });
     };

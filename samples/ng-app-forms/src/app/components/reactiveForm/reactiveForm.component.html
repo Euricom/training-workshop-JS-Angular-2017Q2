@@ -1,0 +1,29 @@
+<div class="jumbotron">
+  <h2>Reactive Driven Form</h2>
+  <form [formGroup]="userForm" (ngSubmit)="submitForm(userForm.value)">
+    <div class="form-group">
+      <label for="firstName2">First Name:</label>
+      <input type="text" class="form-control"
+             placeholder="Enter your firstname" id="firstName2"
+             formControlName="firstName">
+    </div>
+    <div class="form-group">
+      <label for="lastName2">Last Name</label>
+      <input type="text" class="form-control"
+             placeholder="Enter your lastname" id="lastName2"
+             formControlName="lastName">
+    </div>
+    <div class="form-group">
+      <label for="type2">Type</label>
+      <select class="form-control" id="type2" formControlName="type">
+          <option *ngFor="let type of types" [value]="type">{{type}}</option>
+      </select>
+    </div>
+    <div class="checkbox">
+      <label class="checkbox-inline">
+        <input type="checkbox" name="isActive" formControlName="isActive"> Is Active
+      </label>
+    </div>
+    <button type="submit" class="btn btn-default">Submit</button>
+  </form>
+</div>
