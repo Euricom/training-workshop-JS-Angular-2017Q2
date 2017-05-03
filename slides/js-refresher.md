@@ -331,6 +331,20 @@ Angular tslint configs
 - http://codelyzer.com/
 - https://github.com/valor-software/tslint-config-valorsoft
 
+----
+
+## ts-node template
+
+```
+<git-root>\template\ts-node
+```
+
+Template ready to:
+
+- Run any typescript code in nodeJS
+- Editorconfig for consistent tabs/spacing
+- TSLint typescript with [shopify styleguide](https://github.com/Shopify/javascript)
+
 ---
 
 # Scope and Closure
@@ -397,32 +411,6 @@ bar();      // once assigned it can be called
 
 ----
 
-## Function expression - exercise
-
-```js
-const foo = 'bar'
-function bar() {
-    const foo = 'baz'
-    baz()
-    function baz(foo) {
-        foo = 'bam'
-    }
-}
-
-bar()
-console.log(foo)            // ?
-console.log(name)           // ?
-baz()                       // ?
-```
-
-Note:
-
-console.log(foo)            // 'bar'
-console.log(name)           // Error (undefined in js)
-baz()                       // Error!
-
-----
-
 ## Callback function
 
 ```js
@@ -451,7 +439,7 @@ getCustomer(123, function(err, result) {
 
 ----
 
-## Lexical Scope
+## Nested functions & Lexical Scope
 
 Function baz has access to variable bar in higher (lexical) scope.
 
@@ -468,24 +456,50 @@ foo()
 
 ----
 
+## Exercise - functions
+
+```js
+const foo = 'bar';
+function bar() {
+    const foo = 'baz';
+    baz();
+    function baz(foo) {
+        foo = 'bam';
+    }
+}
+
+bar();
+console.log(foo);          // ?
+console.log(name);         // ?
+baz();                     // ?
+```
+
+Note:
+
+console.log(foo)            // 'bar'
+console.log(name)           // Error (undefined in js)
+baz()                       // Error!
+
+----
+
 ## Closure
 
 A Closure is when a function "remember" its lexical scope even when the function is executed outside that lexical scope.
 
 ```javascript
 function foo() {
-    const bar = 'bar'
+    const bar = 'bar';
     return function() {
-        console.log(bar)
-    }
+        console.log(bar);
+    };
 }
 
 function bam() {
-    const fn = foo()
-    fn()
+    const fn = foo();
+    fn();
 }
 
-bam()          // 'bar'
+bam();          // 'bar'
 ```
 
 Another example
@@ -510,10 +524,10 @@ foo()          // 'bar'
 What is the output of the following function?
 
 ```javascript
-    for(var i = 0 i <= 5 i++) {
+    for (var i = 0; i <= 5; i++) {
         setTimeout(function() {
-            console.log('i: ' + i)
-        }, i*1000)
+            console.log('i: ' + i);
+        }, i * 1000);
     }
 ```
 
@@ -548,6 +562,7 @@ Every function, ***while executing***, has a reference to its current executing 
 function doThis() {
     console.log(this.name)     // output?
 }
+doThis();
 ```
 
 `this` is defined by 5 rules (in reverse order):
@@ -567,27 +582,26 @@ function doThis() {
 
 ```javascript
 function foo() {
-    console.log(this.bar)
+    console.log(this.bar);
 }
-const bar = 'bar1'
-const o2 = { bar: 'bar2', foo: foo }
-const o3 = { bar: 'bar3', foo: foo }
-foo()          // ???
-o2.foo()       // ???
-o3.foo()       // ???
+const bar = 'bar1';
+const o2 = { bar: 'bar2', foo: foo };
+const o3 = { bar: 'bar3', foo: foo };
+foo();          // ???
+o2.foo();       // ???
+o3.foo();       // ???
 ```
 
 Result
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
-The 'this' points to the object it is called from (its context), if there is no object fallback to the global (window in browser).
+The 'this' points to the object where it is called from (its context), if there is no object fallback to the global (window in browser).
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
-
 ```javascript
-foo()          // 'bar1' default binding (none strict)
-o2.foo()       // 'bar2' explicit binding
-o3.foo()       // 'bar3' explicit binding
+foo();          // 'bar1' default binding (none strict)
+o2.foo();       // 'bar2' explicit binding
+o3.foo();       // 'bar3' explicit binding
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
@@ -601,17 +615,17 @@ Another example
 const o1 = {
     bar: 'bar1',
     foo: function() {
-        console.log(this.bar)
-    }
+        console.log(this.bar);
+    },
 }
-const o2 = { bar: 'bar2', foo: o1.foo }
+const o2 = { bar: 'bar2', foo: o1.foo };
 
-const bar = 'bar3'
-const foo = o1.foo
+const bar = 'bar3';
+const foo = o1.foo;
 
-o1.foo()           // ???
-o2.foo()           // ???
-foo()              // ???
+o1.foo();           // ???
+o2.foo();           // ???
+foo();              // ???
 ```
 
 Result
@@ -631,17 +645,17 @@ foo()              // 'bar3'
 
 ```javascript
 function foo(arg1, arg2) {
-    console.log(this.bar, arg1, arg2)
+    console.log(this.bar, arg1, arg2);
 }
-const bar = 'bar1'
-const obj = { bar: 'bar2' }
-const a = [5,6,7]
+const bar = 'bar1';
+const obj = { bar: 'bar2' };
+const a = [5, 6, 7];
 
-foo(1,2)                // 'bar1', 1, 2
+foo(1,2);                // 'bar1', 1, 2
 
 // Call the function and explicit pass the this.
-foo.call(obj, 1, 2)     // 'bar2', 1, 2
-foo.apply(obj, a)       // 'bar2', 5, 6
+foo.call(obj, 1, 2);     // 'bar2', 1, 2
+foo.apply(obj, a);       // 'bar2', 5, 6
 ```
 
 ----
@@ -650,13 +664,13 @@ foo.apply(obj, a)       // 'bar2', 5, 6
 
 ```javascript
 function foo(baz, bam) {
-    console.log(this.bar + ' ' + baz + ' ' + bam)
+    console.log(this.bar + ' ' + baz + ' ' + bam);
 }
 
-const obj = { bar: 'bar' }
-const foo2 = foo.bind(obj, 'baz')
+const obj = { bar: 'bar' };
+const foo2 = foo.bind(obj, 'baz');
 
-foo2('bam')             // 'bar baz bam'
+foo2('bam');             // 'bar baz bam'
 ```
 
 Typicall used in this context
@@ -681,10 +695,10 @@ car.start();        // output: Bmw started
 ```javascript
 // construtor function (mark the pascal casing)
 function User(name) {
-    this.name = name
+    this.name = name;
 }
-const user = new User('peter')
-user.name          // 'peter'
+const user = new User('peter');
+user.name;         // 'peter'
 ```
 
 Following is happening:
@@ -981,12 +995,26 @@ console.log(3 == "3");          // true
 console.log(1 == true);         // true
 console.log('' == false);       // true
 console.log('23' == true);      // true
+console.log('true' == true);    // true
 console.log('false' == false);  // false
 
 console.log(3 === "3");         // false
 ```
 
 See [http://dorey.github.io/JavaScript-Equality-Table/](http://dorey.github.io/JavaScript-Equality-Table/)
+
+> Always use 3 equals unless you have a good reason to use 2.
+
+----
+
+## Truthy / Falsy
+
+```js
+// what about following conditions check
+if (value) {
+    ...
+}
+```
 
 Truthy
 
@@ -1014,6 +1042,8 @@ NaN (a special Number value meaning Not-a-Number!)
 
 ## typeof
 
+This is logic
+
 ```js
 typeof 89                   // 'number'
 typeof true                 // 'boolean'
@@ -1025,7 +1055,7 @@ let val;
 typeof val                  // 'undefined'
 ```
 
-but
+but, what is this!
 
 ```js
 typeof null                 // 'object'
@@ -1163,7 +1193,7 @@ vs
 vs
 
 ```js
-    // ES6
+    // ES6 / Typescript
     // Method definition shorthand syntax omits `function` keyword & colon
     function getCar(make, model, value) {
         return {
@@ -1207,7 +1237,7 @@ array.find(function(item) => {
 ```
 
 ```js
-// ES6
+// ES6 / Typescript
 service.getCustomer(123, (result) => {
     console.log(result);
 })
@@ -1231,7 +1261,7 @@ const car = {
 car.start();        // output: Bmw started
 ```
 
-> The this reference in an arrow function is comming from outer scope
+> The this reference in an arrow function is coming from outer scope
 
 ----
 
@@ -1290,7 +1320,7 @@ Inside (${ and }) is treated as a JavaScript expression
 Forget callbacks, use promises.
 
 ```js
-    function timeout(duration = 0) {
+    function ptimeout(duration = 0) {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 resolve()
@@ -1300,10 +1330,10 @@ Forget callbacks, use promises.
 ```
 
 ```js
-    timeout(1000)
+    ptimeout(1000)
         .then(() => {
             console.log('hello')
-            return timeout(2000)
+            return ptimeout(2000)
         })
         .then(() => {
             console.log('world')
