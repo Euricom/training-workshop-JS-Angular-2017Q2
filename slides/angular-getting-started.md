@@ -130,6 +130,14 @@ ng xi18n    # Extract i18n texts tags
 ng eject    # Use webpack & webpack-dev-server directly
 ```
 
+<small>
+[https://github.com/angular/angular-cli/wiki](https://github.com/angular/angular-cli/wiki)
+</small>
+<br>
+<small>
+[https://www.sitepoint.com/ultimate-angular-cli-reference/](https://www.sitepoint.com/ultimate-angular-cli-reference/)
+</small>
+
 ----
 
 ## Improved npm scripts
@@ -157,35 +165,6 @@ So we have the following commands:
 - ```test```: Run unit tests and auto watch for changes
 - ```test:ci```: Run unit test and linting once
 - ```lint```: Run linting once
-
-----
-
-## Adding Features
-
-You can use the ```ng generate``` command to add features to your existing application:
-
-```bash
-$ ng generate class myClass # add a class to your application
-$ ng generate component myComponent # add a component to your application
-$ ng generate directive myDirective # add a directive to your application
-$ ng generate enum myEnum # add an enum to your application
-$ ng generate module myModule # add a module to your application
-$ ng generate pipe myPipe # add a pipe to your application
-$ ng generate service myService # add a service to your application
-```
-
-Typically use
-
-```bash
-# create a component: UserListComponent with no spec file and inline template
-$ ng g c userList --spec=false --inline-template
-```
-
-<small>
-More: [https://www.sitepoint.com/ultimate-angular-cli-reference/](https://www.sitepoint.com/ultimate-angular-cli-reference/)
-</small>
-
-https://github.com/angular/angular-cli/wiki
 
 ---
 
@@ -282,15 +261,14 @@ A component contains isolated logic that controls a region of the user interface
 
 ```js
 // app.component.ts
-import { Component } from '@angular/core'
-
+import { Component } from '@angular/core';
 @Component({
   selector: 'app-root',
-  template: '<div>{{title}}</div>',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Hello Angular';
-  ...
+  title = 'app works!';
 }
 ```
 
@@ -310,22 +288,16 @@ index.html
 Templates are html snippets telling how Angular should render the component
 
 ```html
-<ul ngClass="user">
-    <li *ngFor="let user of users">
-        {{ user.name }}
-    </li>
-</ul>
-
-<user-profile *ngIf="selectedUser" [user]="selectedUser"></user-profile>
+<h1>
+  {{title}}
+</h1>
 ```
-
-All the build-in directives (like: *ngFor, ngClass, *ngIf) are defined in the CommonModule.
 
 ----
 
-## Templates - Use
+## Templates
 
-Template can be written as a embedded template string (use back tick)
+Template can be written as a embedded template string <br>(use back tick)
 
 ```js
 @component({
@@ -338,7 +310,7 @@ Template can be written as a embedded template string (use back tick)
 export class UserProfile {}
 ```
 
-or as linked template
+or as separated template file
 
 ```js
 @component({
@@ -347,10 +319,6 @@ or as linked template
 })
 export class UserProfile {}
 ```
-
-<small>
-More see: [Component Relative Paths in Angular 2](https://blog.thoughtram.io/angular/2016/06/08/component-relative-paths-in-angular-2.html)
-</small>
 
 ---
 
@@ -420,16 +388,12 @@ We have a binding to the textContent property of the dom element. See http://www
 ## One way binding - More
 
 ```html
-<div title="Hello {{ponyName}}">
+<button title="Hello {{ponyName}}">
 <button [title]="buttonTitle">Click me</button>
 <input [value]="firstName">
 
-<!-- class property binding -->
-<div [class.extra-sparkle]="isDelightful">
-<div [style.width.px]="mySize">
-
-<!-- attribute binding -->
-<button [attr.arial-label]="ok">OK</button>
+<!-- class property binding: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/style -->
+<span [style.color]="red">Hello from span</span>
 ```
 
 Some text magic
@@ -555,14 +519,10 @@ export class AppComponent {
 ### Class binding
 
 ```html
-<!-- String binding -->
-<p ngClass="centered-text underlined" class="orange">
-
 <!-- Binding an array -->
 <p [ngClass]="['warning', 'big']">
 
 <!-- Binding an object -->
-<p [ngClass]="{ card: true, dark: false, flat: flat }">
 <div [ngClass]="{ active: isActive, disabled: isDisabled }">
 ```
 
@@ -574,29 +534,6 @@ export class MyComponent {
 
 ```
 
-----
-
-## Two-way binding
-
-Lets create a simple form
-
-    <!-- Two-way binding -->
-    <form (ngSubmit)="onSubmit()">
-        <input type="text" [(ngModel)]="userName"/>
-        <button type="submit">Submit</button>
-    </form>
-
-    // code
-    class AppComponent {
-        userName: string
-        constructor() {
-            this.userName = 'peter';
-        }
-        onSubmit() {
-            console.log(this.userName);
-        }
-    }
-
 ---
 
 # Exercise
@@ -604,6 +541,42 @@ Lets create a simple form
 > Toggle the visibility of a text on the screen by a click on a button
 
 - Try to find multiple solutions
+
+---
+
+# Pipes
+
+> Pipes are like formatters
+
+----
+
+## Use of pipes
+
+Simple
+
+    {{ 'Hello world' | uppercase }}
+
+Parameterizing a Pipe
+
+    <p>My birthday is {{ birthday | date:"MM/dd/yy" }}</p>
+
+Chaining pipes
+
+    <p>{{ data | date:"MM/dd/yy" | uppercase}}</p>
+
+Standard pipes
+
+- DatePipe
+- UpperCasePipe, LowerCasePipe
+- NumberPipe, CurrencyPipe
+- PercentPipe
+- JsonPipe
+
+<small>
+More see: [Pipes docs](https://angular.io/docs/ts/latest/api/#!?query=pipe)
+</small>
+
+> You can build your own pipes
 
 ---
 
@@ -729,17 +702,15 @@ The minimal component
 user.component.ts
 
 ```js
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 @Component({
   selector: 'user',
   template: `
     <h1>My User Component</h1>
   `,
 })
-export class UserComponent implements OnInit {
+export class UserComponent {
   constructor() { }
-  ngOnInit() {
-  }
 }
 ```
 
@@ -757,19 +728,28 @@ import { UserComponent } from './user/user.component';
 export class AppModule { }
 ```
 
+And use it
+
+```html
+<h1>User</h1>
+<user></user>
+```
+
 ----
 
 ## Lifecycle hooks
 
 ```js
-class MyComponent implement OnInit, OnDestroy, OnChanges, AfterViewInit {
+import { Component, OnInit, OnDestroy, OnChanges } from '@angular/core';
+
+@Component({
+    ...
+})
+export class MyComponent implement OnInit, OnDestroy, OnChanges {
     ngOnInit() {
     }
 
     ngOnChange() {
-    }
-
-    ngAfterViewInit() {
     }
 
     ngOnDestroy() {
@@ -855,24 +835,24 @@ import { Component, Input, Output } from '@angular/core';
   selector: 'card',
   template: `
     <div class="card">
-        <span class="card-header">{{ header }}</span>
-        <!-- single slot transclusion here -->
-        <ng-content></ng-content>
+        <span class="card-header">{{ title }}</span>
+        <div class="card-content">
+            <ng-content></ng-content>
+        </div>
     </div>
   `,
 })
 export class CardComponent {
-    @Input() header: string = 'this is header';
+    @Input() title: string;
     constructor() {
     }
 }
 ```
 
 ```html
-<card header="my header">
+<card title="My User Card">
     <!-- put your dynamic content here -->
-    <h4>Some title</h4>
-    <p class="card-text">For example this line of text and</p>
+    <p>For example this line of text</p>
     <!-- end dynamic content -->
 </card>
 ```
@@ -886,13 +866,32 @@ You can have [multi-slot projection](https://scotch.io/tutorials/angular-2-trans
 
 ## Styling
 
+Separated styling file (default)
+
+```js
+@Component({
+  selector: 'my-zippy',
+  templateUrl: './myZippy.component.html',
+  styleUrls: ['./myZippy.compoment.css'],
+})
+export class ZippyComponent { }
+```
+
 Inline styling
 
 ```js
 @Component({
   selector: 'my-zippy',
-  templateUrl: 'my-zippy.component.html',
+  template: `
+    <h1>MyZippy</h1>
+    <div class="zippy">
+        <ul><li>item1</li><li>item2</li></ul>
+    </div>
+  `,
   styles: [`
+    h1 {
+        color: red;
+    }
     .zippy {
       background: green;
     }
@@ -901,22 +900,11 @@ Inline styling
 export class ZippyComponent { }
 ```
 
-External styling
-
-```js
-@Component({
-  selector: 'my-zippy',
-  templateUrl: './my-zippy.component.html',
-  styleUrls: ['./my-zippy.compoment.less'],
-})
-export class ZippyComponent { }
-```
-
 > By default all component styles are isolated and not global (you can change this)
 
 ----
 
-## Add style with Angular-cli
+## Add external styles with Angular-cli
 
 ```bash
 $ npm install bootstrap --save
@@ -951,12 +939,17 @@ Using less or sass
 
 ```html
     <!-- default alert: warning -->
-    <alert type="warning">
+    <alert>
         Almost out of stock
     </alert>
 
-    <!-- custom alert with event -->
-    <alert type="alert" (closed)="onClosed()">
+    <!-- info alert -->
+    <alert type="info">
+        You can order online.
+    </alert>
+
+    <!-- error alert with close button -->
+    <alert type="error" (closed)="onClosed()">
         <strong>Alert!</strong> We have a problem.
     </alert>
 ```
@@ -998,13 +991,14 @@ And use it (with Dependency Injection)
 ```js
 ...
 import { UserService } from './services/userService'
-
-export class UserListComponent {
+...
+export class UserListComponent implements OnInit {
+    users = [];
     // the userService is injected by the Angular Dependency Injection
     constructor(private userService: UserService) {
     }
 
-    anAction() {
+    ngOnInit() {
         this.users = this.userService.getUser();
     }
 }
@@ -1035,7 +1029,7 @@ import { UserService } from './services/userService'
 
 ## Angular Services
 
-You can use services in services, like the Angular http server
+You can use services in services, like the Angular http service
 
 ```js
 import { Injectable } from '@angular/core'
@@ -1051,173 +1045,6 @@ export class UserService {
     }
 }
 
-```
-
----
-
-# Pipes
-
-> Pipes are like the filters in Angular 1or VueJS
-
-----
-
-## Use of pipes
-
-Simple
-
-    {{ 'Hello world' | uppercase }}
-
-Parameterizing a Pipe
-
-    <p>My birthday is {{ birthday | date:"MM/dd/yy" }}</p>
-
-Chaining pipes
-
-    <p>{{ data | date:"MM/dd/yy" | uppercase}}</p>
-
-Standard pipes
-
-- DatePipe
-- UpperCasePipe, LowerCasePipe
-- NumberPipe, CurrencyPipe
-- PercentPipe
-- JsonPipe
-
-<small>
-More see: [Pipes docs](https://angular.io/docs/ts/latest/api/#!?query=pipe)
-</small>
-
-----
-
-## Custom pipe
-
-Build your first pipe
-
-```js
-    import { Pipe, PipeTransform } from "@angular/core"
-
-    @Pipe({
-        name: 'firstuppercase'
-    })
-    export class FirstUppercasePipe implements PipeTransform {
-        transform(value) {
-            return value.charAt(0).toUpperCase() + value.slice(1);
-        }
-    }
-```
-
-register it
-
-```js
-// app.module.ts
-@NgModule({
-    declarations: [
-        FirstUppercasePipe
-    ],
-    ...
-})
-```
-
-and use it
-
-```js
-// my.component.ts
-import { FirstUppercasePipe } from '../pipes/firstUppercasePipe';
-
-@Component({
-    selector: 'my-component',
-    template: `
-        <h2>MyComponent</h2>
-        {{ name | firstuppercase }}
-    `,
-})
-```
-
-----
-
-## Custom pipe - with parameter
-
-Filter pipe with argument
-
-```ts
-@Pipe({
-    name: 'filter'
-})
-export class FilterPipe implements PipeTransform {
-    transform(value, name) {
-        return value.filter(item => item.name == name)
-    }
-}
-```
-
-Use
-
-```html
-{{ data | filter:'abc'}}
-```
-
-----
-
-## Pipe purity
-
-A pipe will only run again when the arguments are changed, not when the data changes. So by default all pipes are pure.
-
-```ts
-@Pipe({
-  name: 'filter',
-})
-export class FilterPipe implements PipeTransform  {
-  transform(value) {
-    return value.filter(item => item.id > 10)
-  }
-}
-```
-
-```ts
-users = [
-    { id: 1, name: 'peter'},
-    { id: 12, name: 'luc'},
-];
-
-onAdduser() {
-    // adding an element on the array won't update the pure pipe
-    this.users.push({ id: 14, name: 'peter'})
-}
-```
-
-```html
-<ul>
-  <li *ngFor="let user of users | filter">
-    {{user.name}}
-  </li>
-</ul>
-```
-
-----
-
-## Pipe purity
-
-You can disable it by
-
-```js
-@Pipe({
-    name: 'filter',
-    // An unpure pipe will run always
-    // Be aware of performance issues because you pipe will
-    // run many times more
-    pure: false,
-})
-```
-
-Another solution is to immutable mutate the array (faster)
-
-```ts
-onAdduser() {
-    this.users = [
-       ...this.users,
-       { id: 14, name: 'peter'}
-    ]
-}
 ```
 
 ---
@@ -1304,41 +1131,6 @@ export class MyComponent {
 
 ----
 
-## Handle error
-
-```js
-import { Http } from '@angular/http'
-import { Observable } from 'rxjs/Observable'
-import 'rxjs/add/operator/map'
-import 'rxjs/add/operator/catch'
-
-export class TaskService {
-    constructor(private http: Http) {}
-    getTasks() {
-        return this.http.get('tasks.json')
-            .map(res => res.json())
-            .catch(error => {
-                let msg = `Status code ${error.status} on url ${error.url}`
-                console.error(msg)
-                return Observable.throw(error.json().error || 'Server error')
-            });
-    }
-}
-```
-
-```js
-// my.component.ts
-this.taskService.getTasks()
-    .subscribe(
-        // first function is result
-        users => this.users = users,
-        // second function is error
-        error => this.errorMessage = error,
-    );
-```
-
-----
-
 ## Typed response
 
 ```js
@@ -1358,11 +1150,6 @@ import { Task } from '../models/task.ts';
 getTasks() : Observable<Task[]> {
     return this.http.get('tasks.json')
         .map((res: Response)) => res.json())
-        .catch((error: Response) => {
-            let msg = `Status code ${error.status} on url ${error.url}`
-            console.error(msg)
-            return Observable.throw(error.json().error || 'Server error')
-        });
 }
 ```
 

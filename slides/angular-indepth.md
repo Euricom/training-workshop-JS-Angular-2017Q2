@@ -369,6 +369,142 @@ To target the component itself
 
 ---
 
+## Custom pipe
+> Build your own
+
+---
+
+## Build your first pipe
+
+```js
+    import { Pipe, PipeTransform } from "@angular/core"
+
+    @Pipe({
+        name: 'firstuppercase'
+    })
+    export class FirstUppercasePipe implements PipeTransform {
+        transform(value) {
+            return value.charAt(0).toUpperCase() + value.slice(1);
+        }
+    }
+```
+
+register it
+
+```js
+// app.module.ts
+@NgModule({
+    declarations: [
+        FirstUppercasePipe
+    ],
+    ...
+})
+```
+
+and use it
+
+```js
+// my.component.ts
+import { FirstUppercasePipe } from '../pipes/firstUppercasePipe';
+
+@Component({
+    selector: 'my-component',
+    template: `
+        <h2>MyComponent</h2>
+        {{ name | firstuppercase }}
+    `,
+})
+```
+
+----
+
+## Custom pipe - with parameter
+
+Filter pipe with argument
+
+```ts
+@Pipe({
+    name: 'filter'
+})
+export class FilterPipe implements PipeTransform {
+    transform(value, name) {
+        return value.filter(item => item.name == name)
+    }
+}
+```
+
+Use
+
+```html
+{{ data | filter:'abc'}}
+```
+
+----
+
+## Pipe purity
+
+A pipe will only run again when the arguments are changed, not when the data changes. So by default all pipes are pure.
+
+```ts
+@Pipe({
+  name: 'filter',
+})
+export class FilterPipe implements PipeTransform  {
+  transform(value) {
+    return value.filter(item => item.id > 10)
+  }
+}
+```
+
+```ts
+users = [
+    { id: 1, name: 'peter'},
+    { id: 12, name: 'luc'},
+];
+
+onAdduser() {
+    // adding an element on the array won't update the pure pipe
+    this.users.push({ id: 14, name: 'peter'})
+}
+```
+
+```html
+<ul>
+  <li *ngFor="let user of users | filter">
+    {{user.name}}
+  </li>
+</ul>
+```
+
+----
+
+## Pipe purity
+
+You can disable it by
+
+```js
+@Pipe({
+    name: 'filter',
+    // An unpure pipe will run always
+    // Be aware of performance issues because you pipe will
+    // run many times more
+    pure: false,
+})
+```
+
+Another solution is to immutable mutate the array (faster)
+
+```ts
+onAdduser() {
+    this.users = [
+       ...this.users,
+       { id: 14, name: 'peter'}
+    ]
+}
+```
+
+---
+
 # Feature Modules
 
 > Decompose your app into separated modules

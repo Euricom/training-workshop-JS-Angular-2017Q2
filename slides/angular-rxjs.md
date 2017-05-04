@@ -92,13 +92,20 @@ Typical used operators during http calls
 
 ----
 
-## Http improved error handling
+## Handle http error
 
 ```js
-    getCustomers() Observable<Customer> {
+import { Http } from '@angular/http'
+import { Observable } from 'rxjs/Observable'
+import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/catch'
+
+export class CustomerService {
+    constructor(private http: Http) {}
+    getAll() Observable<Customer> {
         return this.http.get('api/customers')
             .map(res => res.json())
-            .catch(handleError);
+            .catch(this.handleError);
     }
 
     handleError(error: Response | any) {
@@ -114,11 +121,27 @@ Typical used operators during http calls
         }
         return Observable.throw(error || 'Communication Error')
     }
+}
 ```
 
 ----
 
-Wait for multiple http calls
+## Handle http error
+
+```js
+// my.component.ts
+this.customerService.getAll()
+    .subscribe(
+        // first function is result
+        customers => this.getAll = getAll,
+        // second function is error
+        error => this.errorMessage = error,
+    );
+```
+
+----
+
+## Wait for multiple http calls
 
 ```js
 const users$ = http.get('api/users').map(res => res.json())
