@@ -1,4 +1,4 @@
-### Javascript/Angular - Xerius - Agenda
+## Javascript/Angular - Agenda
 
 * Day1:
     - [Intro](./intro.md)

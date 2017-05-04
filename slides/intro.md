@@ -1,5 +1,6 @@
-# Javascript/Angular - Xerius - Intro
-<small>by Peter Cosemans</small>
+# Javascript/Angular
+## Xerius
+<small>by Peter Cosemans, Euricom</small>
 <br>
 <br>
 <small>
