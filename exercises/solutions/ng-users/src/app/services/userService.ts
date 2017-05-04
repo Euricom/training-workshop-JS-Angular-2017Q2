@@ -11,7 +11,7 @@ export class UserService {
 
   getUsers(): Observable<User[]> {
     console.log('getUsers');
-    return this.http.get('/api/users')
+    return this.http.get('http://localhost:3000/api/users')
       .map((res: Response) => res.json())
       .map(data => data.users)
       .do(data => console.log('getUsers', data))
