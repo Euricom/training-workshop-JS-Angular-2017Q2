@@ -18,6 +18,8 @@ Copyright (c) 2017 Euricom nv. Licensed under the [MIT license](https://opensour
 - Examples
 - Exercises
 
+For code samples: https://gist.github.com/cosemansp
+
 ---
 
 # Me
@@ -26,6 +28,7 @@ Copyright (c) 2017 Euricom nv. Licensed under the [MIT license](https://opensour
     - peter.cosemans@euri.com
     - https://github.com/mjrio
     - http://github.com/euricom
+    - https://gist.github.com/cosemansp
 - 12 year Microsoft .NET Development
 - 4 year Front-end Development
 - Architect, Tech Coach, Trainer
