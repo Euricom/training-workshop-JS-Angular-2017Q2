@@ -128,10 +128,8 @@ The router-outlet
     template: `
         <h1>My App</h1>
         <nav>
-            <!-- link by URL -->
-            <a routerLink="/foo">Foo</a>
-            <!-- link by route name -->
-            <a routerlink="['bar']">Bar</a>
+            <!-- route link -->
+            <a routerLink="foo">Foo</a>
         </nav>
         <!-- Routed views go here -->
         <router-outlet></router-outlet>
@@ -147,7 +145,7 @@ export class AppComponent() {}
 ```js
 @Component({
     template: `
-        <a routerLink="/foo" routerLinkActive="active-link">Foo</a>
+        <a routerLink="foo" routerLinkActive="active-link">Foo</a>
     `
     styles: [`
         .active-link {
@@ -171,7 +169,7 @@ Declaring Route Parameters
 ```js
 const appRoutes: Routes = [
     ...
-    { path: 'foo/:id', component: FooComponent },
+    { path: 'product/:id', component: ProductComponent },
     ...
 ]
 ```
@@ -179,8 +177,7 @@ const appRoutes: Routes = [
 Linking to Routes with parameters
 
 ```html
-<a *ngFor="let product of products"
-  [routerLink]="['/product-details', product.id]">
+<a *ngFor="let product of products" [routerLink]="['foo', product.id]">
   {{ product.name }}
 </a>
 ```
@@ -227,13 +224,10 @@ export MyComponent {
 
     action() {
         // absolute
-        this.router.navigate(['/about'])
-        this.router.navigate(['/product-details', id])
+        this.router.navigate('about')
+        this.router.navigate(['about'])
+        this.router.navigate(['product-details', id])
         this.router.navigateByUrl(`/courses/${course.id}`)
-
-        // relative
-        this.router.navigate("../../parent", {relativeTo: this.route})
-        this.router.navigate(["../../parent", {abc: 'xyz'}], {relativeTo: this.route})
 
         // back
         this.location.back()
@@ -257,6 +251,17 @@ export const routes: Routes = [
     ]
   }
 ]
+```
+
+```js
+// from specs route goto overview
+this.router.navigate(['overview'])
+
+// goto root/product-list
+this.router.navigate(['/product-list'])
+
+// from specs, overview goto parent/product-list
+this.router.navigate("../product-list");
 ```
 
 ---
@@ -352,11 +357,10 @@ export class AuthGuard implements CanActivate {
 import { CanDeactivate } from '@angular/router'
 import { MyComponent } from './app/my.component'
 
-export class ConfirmDeactivateGuard implements
-                            CanDeactivate<MyComponent> {
+export class ConfirmDeactivateGuard implements CanDeactivate<MyComponent> {
     // we need this function
-    canDeactivate(target: CanDeactivateComponent) {
-        if(target.hasChanges()){
+    canDeactivate(myComponent: MyComponent) {
+        if(myComponent.hasChanges()){
             return window.confirm('Do you really want to cancel?')
         }
         // return bool, promise or observable
@@ -365,39 +369,9 @@ export class ConfirmDeactivateGuard implements
 }
 ```
 
-----
-
-## Can-Deactivate Guard - Universal
-
-```ts
-import { Injectable } from '@angular/core'
-import { CanDeactivate } from '@angular/router'
-import { Observable } from 'rxjs/Observable'
-
-export interface CanComponentDeactivate {
-    canDeactivate: () => Observable<boolean> | Promise<boolean> | boolean
-}
-
-@Injectable()
-export class CanDeactivateGuard implements CanDeactivate<CanComponentDeactivate> {
-    canDeactivate(component: CanComponentDeactivate) {
-        return component.canDeactivate ? component.canDeactivate() : true
-    }
-}
-```
-
-Component
-
-```ts
-export class MyComponent implements CanComponentDeactivate {
-    canDeactivate() {
-        console.log('i am navigating away')
-        // check and handle route change
-
-        return true  // can deactivate
-    }
-}
-```
+<small>
+https://angular.io/docs/ts/latest/api/router/index/CanDeactivate-interface.html
+</small>
 
 ---
 

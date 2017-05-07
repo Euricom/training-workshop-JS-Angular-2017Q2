@@ -388,7 +388,11 @@ We have a binding to the textContent property of the dom element. See http://www
 ## One way binding - More
 
 ```html
+<!-- use as a string: 'Hello Jumpy' -->
+<button title="Just click the button">
 <button title="Hello {{ponyName}}">
+
+<!-- use as expression -->
 <button [title]="buttonTitle">Click me</button>
 <input [value]="firstName">
 
@@ -516,14 +520,20 @@ export class AppComponent {
 
 ----
 
-### Class binding
+### Class/Style binding
 
 ```html
+<!-- Binding static class with interpollation -->
+<button class="btn btn-{{buttonType}">Click Me</button>
+
 <!-- Binding an array -->
 <p [ngClass]="['warning', 'big']">
 
 <!-- Binding an object -->
 <div [ngClass]="{ active: isActive, disabled: isDisabled }">
+
+<!-- set a style directly -->
+<div [ngStyle]="{ 'color': 'red' }">
 ```
 
 ```js
@@ -1145,6 +1155,7 @@ export class Task {
 
 ```js
 // ./services/taskService.ts
+import { Observable } from 'rxjs/Observable';
 import { Task } from '../models/task.ts';
 
 getTasks() : Observable<Task[]> {

@@ -406,54 +406,11 @@ export const MyValidators = {
 }
 ```
 
-----
-
-## Simplify Errors with 'ngxErrors'
-
-Install
-
-```bash
-yarn add @ultimate/ngxerrors
-```
-
-Setup
-
-```js
-import { NgxErrorsModule } from '@ultimate/ngxerrors';
-
-@NgModule({
-    imports: [
-        ...
-        NgxErrorsModule
-    ]
-    ...
-})
-export class AppModule {}
-```
-
-Use
-
-```html
-<input type="text" id="name" formControlName="name">
-<div ngxErrors="name">
-    <div ngxError="required" when="touched">
-        This field is required!
-    </div>
-    <div [ngxError]="['minlength', 'maxlength']"
-         [when]="['touched', 'dirty']">
-        5 characters minimum, 20 characters maximum
-    </div>
-</div>
-```
-
-<small>
-See: https://github.com/UltimateAngular/ngxerrors
-</small>
-
 ---
 
 # Resources
 
+- [ngxerrors](https://github.com/UltimateAngular/ngxerrors)
 - [ng-validators](https://www.npmjs.com/package/ng-validators)
 - [Angular 2 Form Validation](https://scotch.io/tutorials/angular-2-form-validation)
 - [How to Implement Conditional Validation in Angular 2 Model-driven Forms](https://scotch.io/tutorials/how-to-implement-conditional-validation-in-angular-2-model-driven-forms)

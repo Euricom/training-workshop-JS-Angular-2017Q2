@@ -205,7 +205,7 @@ See also: params, queryParams, fragment, data, url
 
 ## Form valueChanges
 
-Handle control changes
+Handle control changes (valueChanges, statusChanges)
 
 ```html
 <!-- single control form -->
