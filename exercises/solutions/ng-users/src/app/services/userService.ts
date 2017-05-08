@@ -11,14 +11,14 @@ export class UserService {
 
   getUsers(): Observable<User[]> {
     console.log('getUsers');
-    return this.http.get('http://localhost:3000/api/users')
+    return this.http.get('/api/users')
       .map((res: Response) => res.json())
-      .map(data => data.users)
-      .do(data => console.log('getUsers', data))
+      .map(data => data.users.map(userResource => new User(userResource)))
+      .do(users => console.log('getUsers', users))
       .catch(this.handleError);
   }
 
-  handleError(errorRes: Response) {
+  handleError(errorRes: Response | any) {
     console.log('ERROR: ', errorRes.statusText);
     return Observable.throw('Server Error');
   }

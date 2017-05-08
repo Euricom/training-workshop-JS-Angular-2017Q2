@@ -11,9 +11,11 @@ Create Angular App to show list of users
     - LastName
     - Company
     - Email
-    - Address
+    - Address (zip + city + street)
 - Panel view
     - Image
     - FirstName + LastName
     - Company
     - Email
+    - Zip + City
+    - Street

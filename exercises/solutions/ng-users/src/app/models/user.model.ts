@@ -11,4 +11,9 @@ export class User {
     city: String,
     zip: String
   };
+
+  constructor(data: any) {
+    // copy over all properties
+    Object.assign(this, data);
+  }
 }

@@ -1,20 +1,22 @@
 <div>
   <h3>Table View</h3>
-  <table class="table">
+  <table class="table table-hover">
     <thead>
       <tr>
-        <th>First</th>
-        <th>Last</th>
+        <th><a (click)="onSort('firstName')">First</a></th>
+        <th><a (click)="onSort('lastName')">Last</a></th>
+        <th>company</th>
         <th>Email</th>
-        <th>Age</th>
+        <th>Address</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let user of users">
         <td>{{user.firstName}}</td>
         <td>{{user.lastName}}</td>
+        <td>{{user.company}}</td>
         <td>{{user.email}}</td>
-        <td>{{user.age}}</td>
+        <td>{{user.address.zip}} {{user.address.city}} {{user.address.street}}</td>
       </tr>
     </tbody>
   </table>

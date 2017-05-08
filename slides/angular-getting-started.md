@@ -1203,3 +1203,8 @@ package.json
 }
 ```
 
+---
+
+# Resources
+
+- [ngx-pipes](https://github.com/danrevah/ngx-pipes)
