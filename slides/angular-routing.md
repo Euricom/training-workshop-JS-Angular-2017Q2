@@ -341,9 +341,8 @@ And use them in the guard
 export class AuthGuard implements CanActivate {
     constructor(private router: Router) {}
 
-    canActivate(route: ActivatedRouteSnapshot,
-                state: RouterStateSnapshot): boolean {
-        let roles = route.data["roles"] as Array<string>
+    canActivate(route: ActivatedRoute): boolean {
+        let roles = route.snapshot.data["roles"] as Array<string>
         if(this.authService.isInRole(roles)) {
             this.router.navigate(['/login'])
             return false
@@ -411,9 +410,9 @@ import { ContactsService } from './contacts.service'
 @Injectable()
 export class ContactResolve implements Resolve<Contact> {
     constructor(private contactsService: ContactsService) {}
-    resolve(route: ActivatedRouteSnapshot) {
+    resolve(route: ActivatedRoute) {
         // return observable or promise
-        return this.contactsService.getContact(route.params['id'])
+        return this.contactsService.getContact(route.snapshop.params['id'])
     }
 }
 ```
