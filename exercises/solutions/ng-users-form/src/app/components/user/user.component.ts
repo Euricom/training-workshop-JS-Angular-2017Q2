@@ -5,5 +5,5 @@ import { Component, Input } from '@angular/core'
   templateUrl: './user.component.html',
 })
 export class UserComponent {
-  @Input() user
+  @Input() user;
 }

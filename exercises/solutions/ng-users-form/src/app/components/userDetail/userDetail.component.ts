@@ -6,10 +6,6 @@ import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../services/userService';
 import { User } from '../../models/user.model';
 
-export declare class SubmittableFormGroup extends FormGroup {
-  submitted: boolean;
-}
-
 @Component({
   selector: 'user-detail',
   templateUrl: './userDetail.component.html',
@@ -17,7 +13,7 @@ export declare class SubmittableFormGroup extends FormGroup {
 
 export class UserDetailComponent implements OnInit {
   errorMessage: String;
-  userForm: SubmittableFormGroup;
+  userForm: FormGroup;
   user: User = new User();
 
   constructor(
@@ -28,7 +24,7 @@ export class UserDetailComponent implements OnInit {
 
   ngOnInit() {
     // setup form
-    this.userForm = new SubmittableFormGroup({
+    this.userForm = new FormGroup({
       firstName: new FormControl(),
       lastName: new FormControl(),
       email: new FormControl(),
@@ -56,11 +52,6 @@ export class UserDetailComponent implements OnInit {
   }
 
   onSubmit() {
-    this.userForm.submitted = true;
-    if (!this.userForm.valid) {
-      return;
-    }
-
     // update user by form value
     this.user.updateBy(this.userForm.value);
 
