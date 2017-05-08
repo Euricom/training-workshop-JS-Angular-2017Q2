@@ -40,7 +40,8 @@ app.get('/api/tasks', (req, res) => {
 })
 
 // GET /api/users
-// GET /api/users?page=0&pageSize=10
+// GET /api/users?page=1
+// GET /api/users?page=1&pageSize=10
 app.get('/api/users', (req, res) => {
   const page = req.query.page || 0
   const pageSize = req.query.pageSize || 20

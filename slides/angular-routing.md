@@ -47,8 +47,8 @@ import { AppComponent } from './app.component'
 
 // create routes
 const appRoutes: Routes = [
-  { path: 'foo', component: FooComponent, name: 'foo' },
-  { path: 'bar', component: BarComponent, name: 'bar' },
+  { path: 'foo', component: FooComponent },
+  { path: 'bar', component: BarComponent },
   { path: '', redirectTo: '/foo', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }
 ]
@@ -81,7 +81,7 @@ FooComponent
         <h1>Foo</h1>
     `
 })
-export class FooComponent() {}
+export class FooComponent {}
 ```
 
 BarComponent
@@ -92,7 +92,7 @@ BarComponent
         <h1>Bar</h1>
     `
 })
-export class BarComponent() {}
+export class BarComponent {}
 ```
 
 PageNotFoundComponent
@@ -177,7 +177,7 @@ const appRoutes: Routes = [
 Linking to Routes with parameters
 
 ```html
-<a *ngFor="let product of products" [routerLink]="['foo', product.id]">
+<a *ngFor="let product of products" [routerLink]="['product', product.id]">
   {{ product.name }}
 </a>
 ```
@@ -223,10 +223,14 @@ export MyComponent {
     constructor(private router: Router, private location: Location) {}
 
     action() {
-        // absolute
+        // relative
+        this.router.navigate('about')
         this.router.navigate('about')
         this.router.navigate(['about'])
-        this.router.navigate(['product-details', id])
+
+        // absolute
+        this.router.navigate(['/about'])
+        this.router.navigate(['/product-details', id])
         this.router.navigateByUrl(`/courses/${course.id}`)
 
         // back

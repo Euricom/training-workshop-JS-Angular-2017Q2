@@ -76,7 +76,7 @@ export class AppModule { }
 Bootstrap styled form
 
 ```html
-<form (ngSubmit)="onSubmit()" #theForm="ngForm" novalidate>
+<form (ngSubmit)="onSubmit()">
     <div class="form-group">
         <label for="name">Name</label>
         <input type="text" class="form-control" name="name"
@@ -84,9 +84,7 @@ Bootstrap styled form
     </div>
     <div class="form-group">
         <label for="power">Type</label>
-        <select class="form-control" name="type"
-                [(ngModel)]="model.type"
-                (ngModelChange)="onTypeChange($event)">
+        <select class="form-control" name="type" [(ngModel)]="model.type">
             <option *ngFor="let type of types" [value]="type">{{type}}</option>
         </select>
     </div>
@@ -103,13 +101,31 @@ export class MyComponent {
         'standard',
         'advanced',
     ]
-    submitted = false
     onSubmit() {
         console.log('submit', this.model)
-        this.submitted = true
     }
-    onTypeChange(event) {
-        console.log('type changed', event)
+}
+```
+
+----
+
+## Handle form input changes
+
+```html
+<form>
+    <div class="form-group">
+        <label for="name">Search</label>
+        <input type="text" class="form-control" name="name"
+               (ngModelChange)="onNameChange($event)">
+    </div>
+</form>
+```
+
+```js
+export FormComponent {
+    ...
+    onNameChange(value) {
+        console.log(value);
     }
 }
 ```
