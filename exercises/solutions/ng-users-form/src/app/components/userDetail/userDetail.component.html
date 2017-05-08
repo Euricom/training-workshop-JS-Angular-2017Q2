@@ -1,0 +1,81 @@
+<h1>userDetail</h1>
+
+<form (ngSubmit)="onSubmit()" [formGroup]="userForm" novalidate>
+<div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="firstName">First name</label>
+        <input type="text" class="form-control" formControlName="firstName">
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="lastName">Last name</label>
+        <input type="text" class="form-control" formControlName="lastName">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" formControlName="email">
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="text" class="form-control" formControlName="phone">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="age">Age</label>
+        <input type="number" class="form-control" formControlName="age">
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="company">Company</label>
+        <input type="text" class="form-control" formControlName="company">
+      </div>
+    </div>
+  </div>
+
+  <div formGroupName="address">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="street">Street</label>
+          <input type="text" class="form-control" formControlName="street">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-2">
+        <div class="form-group">
+          <label for="zip">Zip</label>
+          <input type="text" class="form-control" formControlName="zip">
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label for="city">City</label>
+          <input type="text" class="form-control" formControlName="city">
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="btn btn-default" (click)="onCancel($event)">Cancel</button>
+  <button class="btn btn-success" type="submit">Save</button>
+  <button *ngIf="user.id" class="btn btn-danger pull-right" (click)="onDelete(user, $event)">Delete</button>
+</form>
