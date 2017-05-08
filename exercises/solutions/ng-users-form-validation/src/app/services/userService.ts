@@ -12,36 +12,47 @@ export class UserService {
   constructor(private http: Http) {
   }
 
-  getUsers(): Observable<User[]> {
-    console.log('getUsers');
+  getAll(): Observable<User[]> {
+    console.log('getAll');
     return this.http.get('/api/users')
       .map((res: Response) => res.json())
-      .map(data => data.users)
-      .do(data => console.log('getUsers', data))
+      .map(data => data.users.map(item => new User(item)))
+      .do(users => console.log('get result', users))
       .catch(this.handleError);
   }
 
-  getUser(id): Observable<User> {
+  getById(id): Observable<User> {
+    console.log('getById', id);
     return this.http.get(`/api/users/${id}`)
       .map((res: Response) => res.json())
+      .map(data => new User(data))
+      .do(user => console.log('get result', user))
       .catch(this.handleError);
   }
 
-  save(user): Observable<User> {
+  save(user: User): Observable<User> {
+    console.log('save', user);
     if (user.id) {
       return this.http.put(`/api/users/${user.id}`, user)
         .map((res: Response) => res.json())
+        .map(resource => new User(resource))
+        .do(updatedUser => console.log('put result', updatedUser))
         .catch(this.handleError);
     } else {
       return this.http.post(`/api/users`, user)
         .map((res: Response) => res.json())
+        .map(resource => new User(resource))
+        .do(updatedUser => console.log('post result', updatedUser))
         .catch(this.handleError);
     }
   }
 
-  delete(user): Observable<User> {
+  delete(user: User): Observable<User> {
+    console.log('delete', user);
     return this.http.delete(`/api/users/${user.id}`)
         .map((res: Response) => res.json())
+        .map(resource => new User(resource))
+        .do(deletedUser => console.log('delete result', deletedUser))
         .catch(this.handleError);
   }
 

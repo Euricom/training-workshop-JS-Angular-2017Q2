@@ -114,7 +114,12 @@ app.put('/api/users/:id', (req, res) => {
   user.email = resource.email
   user.age = Number(resource.age)
   user.company = resource.company
-
+  if (resource.address) {
+    user.address = {}
+    user.address.zip = resource.address.zip
+    user.address.city = resource.address.city
+    user.address.street = resource.address.street
+  }
   return res.status(200).send(user)
 })
 
