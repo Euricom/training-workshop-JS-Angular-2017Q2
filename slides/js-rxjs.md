@@ -675,8 +675,19 @@ interval, map, take, filter, debounceTime, count
 - Create a observable from a button click, use Observable.create() and NOT Observer.fromEvent()
 - Also implement the unsubscribe function
 
+
 ```html
 <button id="myBtn">Click me</button>
+```
+
+```js
+function createFromButtonClick(btn) {
+    // implement this
+}
+
+const stream$ = createFromButtonClick('#myBtn');
+stream$.subscribe(result => console.log(result));
+
 ```
 
 ```js
