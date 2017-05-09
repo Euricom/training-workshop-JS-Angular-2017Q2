@@ -292,89 +292,12 @@ See: [http://www.adonespitogo.com/articles/angular-2-extending-http-provider/](h
 
 ---
 
-# Components
-> Good to know
-
-----
-
-## Parent to Child
-
-Get a reference to a child: `@ViewChild()` or `@ViewChildren()`
-
-```js
-// userListComponent.js
-@component({
-    template: `
-        <filter></filter>
-    `
-})
-export class UserListComponent {
-    @ViewChild(FilterComponent) filter: FilterComponent;
-
-    getUsers() {
-        this.apiService.getUsers()
-            .then(users => {
-                this.users = users;
-                this.filter.clear();
-            })
-    }
-}
-```
-
-```js
-// filterComponent.js
-export class FilterComponent {
-    clear() {
-        this.filter = '';
-    }
-}
-```
-
-<small>
-You also have @ContentChild/@ContentChildren which looks for elements in your components content (the nodes projected info the component).
-</small>
-
-----
-
-## Style View Encapsulation
-
-You can specify the view encapsulation
-
-```js
-@Component({
-    ...
-    encapsulation: ViewEncapsulation.Emulated  // default
-})
-export class MyComponent { }
-```
-
-Available View Encapsulation Types:
-
-- ***ViewEncapsulation.None***<br>No Shadow DOM at all. Therefore, also no style encapsulation.
-- ***ViewEncapsulation.Emulated***<br>Emulated Shadow DOM with style encapsulation.
-- ***ViewEncapsulation.Native***<br>Native Shadow DOM with all it’s goodness. [Limit support](http://caniuse.com/#search=shadowDOM)
-
-----
-
-## Style View Encapsulation - Shadow DOM
-
-To target the component itself
-
-```css
-:host {
-  display: block;
-  border: 1px solid black;
-}
-```
-
----
-
 ## Custom pipe
 > Build your own
 
 ---
 
-## Build your first pipe
+## Build your custom pipe
 
 ```js
     import { Pipe, PipeTransform } from "@angular/core"
@@ -745,6 +668,83 @@ export class IfDirective {
 <small>
 More: [Writing A Structural Directive in Angular 2](https://teropa.info/blog/2016/03/06/writing-an-angular-2-template-directive.html)
 </small>
+
+---
+
+# Components
+> Good to know
+
+----
+
+## Parent to Child
+
+Get a reference to a child: `@ViewChild()` or `@ViewChildren()`
+
+```js
+// userListComponent.js
+@component({
+    template: `
+        <filter></filter>
+    `
+})
+export class UserListComponent {
+    @ViewChild(FilterComponent) filter: FilterComponent;
+
+    getUsers() {
+        this.apiService.getUsers()
+            .then(users => {
+                this.users = users;
+                this.filter.clear();
+            })
+    }
+}
+```
+
+```js
+// filterComponent.js
+export class FilterComponent {
+    clear() {
+        this.filter = '';
+    }
+}
+```
+
+<small>
+You also have @ContentChild/@ContentChildren which looks for elements in your components content (the nodes projected info the component).
+</small>
+
+----
+
+## Style View Encapsulation
+
+You can specify the view encapsulation
+
+```js
+@Component({
+    ...
+    encapsulation: ViewEncapsulation.Emulated  // default
+})
+export class MyComponent { }
+```
+
+Available View Encapsulation Types:
+
+- ***ViewEncapsulation.None***<br>No Shadow DOM at all. Therefore, also no style encapsulation.
+- ***ViewEncapsulation.Emulated***<br>Emulated Shadow DOM with style encapsulation.
+- ***ViewEncapsulation.Native***<br>Native Shadow DOM with all it’s goodness. [Limit support](http://caniuse.com/#search=shadowDOM)
+
+----
+
+## Style View Encapsulation - Shadow DOM
+
+To target the component itself
+
+```css
+:host {
+  display: block;
+  border: 1px solid black;
+}
+```
 
 ---
 

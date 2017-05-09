@@ -672,7 +672,7 @@ interval, map, take, filter, debounceTime, count
 
 # Exercises 2
 
-- Create a observable from a button click, use Observable.create() and NOT Observer.fromEvent()
+- Create a observable from a button click, use Observable.create() and NOT Observer.fromEvent(btn, 'click')
 - Also implement the unsubscribe function
 
 
