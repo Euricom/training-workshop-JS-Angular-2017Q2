@@ -13,12 +13,14 @@ import { UserService } from './services/userService';
 
 import { UsersResolver } from './services/resolvers/usersResolver';
 import { UserResolver } from './services/resolvers/userResolver';
+import { EventAggregator } from './services/eventAggregator';
 
 const appRoutes: Routes = [
   { path: 'detail/:id', component: UserDetailComponent },
   { path: 'detail', component: UserDetailComponent },
   { path: 'list', component: UserTableListComponent },
-  { path: 'panel', component: UserPanelListComponent, resolve: { users: UsersResolver } },
+  // { path: 'panel', component: UserPanelListComponent, resolve: { users: UsersResolver } },
+  { path: 'panel', component: UserPanelListComponent },
   { path: '', redirectTo: '/list', pathMatch: 'full' },
 ];
 
@@ -43,7 +45,8 @@ const appRoutes: Routes = [
         // all services
         UserService,
         UserResolver,
-        UsersResolver
+        UsersResolver,
+        EventAggregator,
     ],
     bootstrap: [AppComponent], // the root component
 })

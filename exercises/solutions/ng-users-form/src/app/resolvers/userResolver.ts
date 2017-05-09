@@ -10,6 +10,6 @@ export class UserResolver implements Resolve<User> {
 
   resolve(route: ActivatedRouteSnapshot) {
     const id: Number = route.params['id'];
-    return this.userService.getUser(id);
+    return this.userService.getById(id);
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { UserService } from '../../services/userService';
@@ -25,9 +25,9 @@ export class UserDetailComponent implements OnInit {
   ngOnInit() {
     // setup form
     this.userForm = new FormGroup({
-      firstName: new FormControl(),
+      firstName: new FormControl(null, [Validators.required]),
       lastName: new FormControl(),
-      email: new FormControl(),
+      email: new FormControl(null),
       phone: new FormControl(),
       age: new FormControl(),
       company: new FormControl(),
