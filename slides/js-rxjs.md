@@ -663,7 +663,31 @@ See [RxJS 5 Operators](https://github.com/Reactive-Extensions/RxJS/tree/master/d
 
 - Create a stream of a single element with type string
 
-- Create a observable from a button click (use Observable.create)
+```
+// operators to use
+interval, map, take, filter, debounceTime, count
+```
+
+---
+
+# Exercises 2
+
+- Create a observable from a button click, use Observable.create() and NOT Observer.fromEvent()
+
+```html
+<button id="myBtn">Click me</button>
+```
+
+```js
+function onClick(event) {
+    console.log(event);
+}
+// to register a button click
+document.getElementById("myBtn").addEventListener("click", onClick);
+
+// to unregister a button click handler
+document.getElementById("myBtn").removeEventListener("click", onClick);
+```
 
 ---
 
