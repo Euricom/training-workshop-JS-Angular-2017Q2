@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpModule } from '@angular/http';
+import { HttpModule, Http, XHRBackend, RequestOptions } from '@angular/http';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -14,6 +14,7 @@ import { UserService } from './services/userService';
 import { UsersResolver } from './services/resolvers/usersResolver';
 import { UserResolver } from './services/resolvers/userResolver';
 import { EventAggregator } from './services/eventAggregator';
+import { CustomHttp } from './services/customHttp'
 
 const appRoutes: Routes = [
   { path: 'detail/:id', component: UserDetailComponent },
@@ -47,6 +48,13 @@ const appRoutes: Routes = [
         UserResolver,
         UsersResolver,
         EventAggregator,
+        {
+            provide: Http,
+            useFactory: (backend: XHRBackend, options: RequestOptions, eventAggregator: EventAggregator) => {
+                return new CustomHttp(backend, options, eventAggregator);
+            },
+            deps: [XHRBackend, RequestOptions, EventAggregator],
+        }
     ],
     bootstrap: [AppComponent], // the root component
 })

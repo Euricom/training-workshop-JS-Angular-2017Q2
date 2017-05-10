@@ -1,6 +1,7 @@
 // app.component.ts
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { EventAggregator } from './services/eventAggregator';
 
 @Component({
   selector: 'app-root',
@@ -12,5 +13,13 @@ import { Observable } from 'rxjs/Observable';
   `],
 })
 export class AppComponent {
+  errorMessage = '';
   title = 'app works!';
+
+  constructor(private eventAggregator: EventAggregator) {
+    eventAggregator.listen('ERROR')
+      .subscribe(error => {
+        this.errorMessage = error;
+      });
+  }
 }
