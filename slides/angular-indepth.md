@@ -249,24 +249,31 @@ constructor(@Inject(APP_CONFIG) config: AppConfig) {
 ## An example - extend http
 
 ```js
+import {
+  Http,
+  RequestOptions,
+  ConnectionBackend,
+  RequestOptionsArgs,
+  Request,
+  Response
+} from '@angular/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+
 @Injectable()
 export class CustomHttp extends Http {
   constructor(backend: ConnectionBackend, defaultOptions: RequestOptions) {
-    super(backend, defaultOptions)
+    super(backend, defaultOptions);
   }
 
   request(url: string | Request, options?: RequestOptionsArgs): Observable<Response> {
-    console.log('request...')
-    return super.request(url, options).catch(res => {
-      // do something
-    })
+    console.log('request...');
+    return super.request(url, options);
   }
 
   get(url: string, options?: RequestOptionsArgs): Observable<Response> {
-    console.log('get...')
-    return super.get(url, options).catch(res => {
-      // do something
-    })
+    console.log('get...');
+    return super.get(url, options);
   }
 }
 ```
