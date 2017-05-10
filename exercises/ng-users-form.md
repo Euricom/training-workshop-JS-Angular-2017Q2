@@ -19,6 +19,10 @@ Refactor ng-users to routing & add/update form
 - Add timeout and retry on http failure
 - Add error handling and reporting
     + Show message on communication failure
+- Handle following errors
+    + Timeout
+    + Http Error (400, 404, 500, ...)
+    + Offline (no tcp/ip)
 
 ## Custom Http Service
 
