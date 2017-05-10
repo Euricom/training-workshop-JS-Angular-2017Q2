@@ -1,21 +1,11 @@
 <h1>userDetail</h1>
 
-{{userForm.valid}}
-{{userForm.controls.firstName.errors | json }}
-
 <form (ngSubmit)="onSubmit()" [formGroup]="userForm">
 <div class="row">
     <div class="col-md-6">
       <div class="form-group">
         <label for="firstName">First name</label>
         <input type="text" class="form-control" formControlName="firstName">
-        <div *ngIf="userForm.controls['firstName'].hasError('required') &&
-                    userForm.controls['firstName'].touched">
-            This field is required!
-        </div>
-        <!--<div *ngIf="userForm.controls.firstName.hasError('minlength')">
-            This field need 3 characters
-        </div>-->
       </div>
     </div>
 
@@ -89,5 +79,3 @@
   <button class="btn btn-success" type="submit" [disabled]="!userForm.valid">Save</button>
   <button *ngIf="user.id" class="btn btn-danger pull-right" (click)="onDelete(user, $event)">Delete</button>
 </form>
-
-VALID: {{userForm.valid}}

@@ -13,3 +13,16 @@ Refactor ng-users to routing & add/update form
 - Add validation
     * First & lastName is required
     * Email must be an email
+
+## Http Error Handling
+
+- Add timeout and retry on http failure
+- Add error handling and reporting
+    + Show message on communication failure
+
+## Custom Http Service
+
+- Create a custom http service
+- Register it as a replacement of http
+- Move http error handling to this service
+- Use EventAggregator to signal AppComponent to display error.

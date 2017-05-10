@@ -25,7 +25,7 @@ export class UserDetailComponent implements OnInit {
   ngOnInit() {
     // setup form
     this.userForm = new FormGroup({
-      firstName: new FormControl(null, [Validators.required]),
+      firstName: new FormControl(),
       lastName: new FormControl(),
       email: new FormControl(null),
       phone: new FormControl(),
