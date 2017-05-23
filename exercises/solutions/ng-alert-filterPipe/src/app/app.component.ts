@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'app works!';
+  filterExpression = '';
   users = [
     { id: 1, name: 'peter'},
     { id: 2, name: 'han'},

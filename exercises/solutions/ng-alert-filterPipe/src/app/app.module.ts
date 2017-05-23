@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 // components
 import { AppComponent } from './app.component';
@@ -12,6 +13,7 @@ import { FilterPipe } from './pipes/filter.pipe';
     imports: [
         // other modules we depend on
         BrowserModule,
+        FormsModule,
     ],
     declarations: [
         // all declared components, directives, pipes, ...

@@ -302,7 +302,7 @@ See: [http://www.adonespitogo.com/articles/angular-2-extending-http-provider/](h
 ## Custom pipe
 > Build your own
 
----
+----
 
 ## Build your custom pipe
 
@@ -350,15 +350,17 @@ import { FirstUppercasePipe } from '../pipes/firstUppercasePipe';
 
 ## Custom pipe - with parameter
 
-Filter pipe with argument
+Date format with argument
 
 ```ts
+import * as moment from 'moment';
+
 @Pipe({
-    name: 'filter'
+    name: 'xeriusDate'
 })
-export class FilterPipe implements PipeTransform {
-    transform(value, name) {
-        return value.filter(item => item.name == name)
+export class XeriusDatePipe implements PipeTransform {
+    transform(value, format = 'DD/MM/YYYY') {
+        return moment(value).format(format);
     }
 }
 ```
@@ -366,7 +368,34 @@ export class FilterPipe implements PipeTransform {
 Use
 
 ```html
-{{ data | filter:'abc'}}
+{{ date | xeriusDate}}
+{{ date | xeriusDate:'MM-YYYY'}}
+```
+
+----
+
+## Exercise
+
+Create a filter pipe
+
+```js
+export class myComponent {
+    items: any = [
+        { id: 1, name: 'Aartselaar'},
+        { id: 2, name: 'Antwerpen'},
+        { id: 3, name: 'Aarschot'},
+        { id: 4, name: 'Deurne'}
+    ]
+}
+```
+
+```html
+<input type="text" [(ngModel)]="filterExpression">
+<ul>
+    <li *ngFor="let item in items | filter:'name':filterExpression">
+        {{id}} - {{name}}
+    </li>
+</ul>
 ```
 
 ----

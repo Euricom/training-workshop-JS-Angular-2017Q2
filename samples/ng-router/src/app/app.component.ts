@@ -6,6 +6,14 @@ import { Component } from '@angular/core'
     <h1>
       {{title}}
     </h1>
+    {{toggle}}
+    <button (click)="toggle= !toggle">toggle</button>
+    <div [ng-show]="toggle">
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+      Beatae maxime esse nisi. Vitae laboriosam obcaecati,
+      corrupti laudantium accusantium nesciunt doloremque nam at corporis beatae quidem assumenda. 
+      Eligendi sapiente ad repellendus!
+    </div>
     <nav>
         <a routerLink="/foo" routerLinkActive="active-link">Foo</a>
         <a routerLink="/bar" routerLinkActive="active-link">Bar</a>
@@ -17,4 +25,5 @@ import { Component } from '@angular/core'
 })
 export class AppComponent {
   title = 'app work'
+  toggle = true;
 }

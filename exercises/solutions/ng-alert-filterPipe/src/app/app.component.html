@@ -15,8 +15,10 @@
 
 <hr>
 <h1>Pipe sample</h1>
+Filter: <input type="text" [(ngModel)]="filterExpression"><br>
+{{filterExpression}}
 <ul>
-  <li *ngFor="let user of users | filter">
+  <li *ngFor="let user of users | filter:filterExpression">
     {{user.name}}
   </li>
 </ul>

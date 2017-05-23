@@ -7,6 +7,8 @@ import { FooComponent } from './components/foo.component'
 import { BarComponent } from './components/bar.component'
 import { PageNotFoundComponent } from './components/notfound.component'
 
+import { NgShowDirective} from './directives/ngshow.directive';
+
 import '../style.css'
 
 const appRoutes: Routes = [
@@ -23,6 +25,7 @@ const appRoutes: Routes = [
     FooComponent,
     BarComponent,
     PageNotFoundComponent,
+    NgShowDirective,
   ],
   imports: [
     BrowserModule,
